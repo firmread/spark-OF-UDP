@@ -47,16 +47,20 @@ typedef struct {
 // local port to listen on
 unsigned int localPort = 8888;
 unsigned int outgoingPort = 7777;
-int led1 = D0;
-int led2 = D1;
-int led3 = D2;
+int led = D0;
 
 const int PACKET_SIZE = 12;
 byte  packetBuffer[PACKET_SIZE]; 
 
+// unsigned long lastsec;
+// int delaysec = 100;
+
 // An UDP instance to let us send and receive packets over UDP
 UDP Udp;
-timer t;
+
+// IPAddress ip(192, 168, 2, 24);
+
+timer t, t2;
 
 
 
@@ -65,11 +69,9 @@ timer t;
 
 void setup()
 {
-  pinMode(led1, OUTPUT);
-  pinMode(led2, OUTPUT);
-  pinMode(led3, OUTPUT);
+  pinMode(led, OUTPUT);
   // start the UDP
-  Udp.begin(localPort); 
+  Udp.begin(localPort);
 
   Serial.begin(9600);
   
@@ -80,13 +82,13 @@ void setup()
   Serial.println(Network.SSID());
 
   t.setup(100);
-
+  t2.setup(100);
 }
 
 void loop()
 {
-  digitalWrite(led1, HIGH);
-  Serial.println(millis());
+
+  //Serial.println(millis());
     // check the device variable sizeof
     // Serial.println(sizeof(int));
     // Serial.println(sizeof(float));
@@ -94,28 +96,25 @@ void loop()
 
   t.update(millis());
 
-  if (t.bTimerFired()){  
+  if (t.bTimerFired()){ 
 
-    digitalWrite(led1, LOW);
     if (int nbytes = Udp.parsePacket()) {
       
       if (nbytes != sizeof(packet)){
         Serial.println("bad packet ???");
-        Udp.flush();
-
       } else {
 
         memset(packetBuffer, 0, sizeof(packet));
-
+        
         Udp.read(packetBuffer,nbytes);
 
-        for(int i=0;i<nbytes;i++) {
-          char c = (char)packetBuffer[i];
-                // Serial.print(c);
+        // for(int i=0;i<nbytes;i++) {
+        //   char c = (char)packetBuffer[i];
+        //         // Serial.print(c);
 
-                // Serial.print(c>>4,HEX);
-                // Serial.print(c&0x0f,HEX);
-        }
+        //         // Serial.print(c>>4,HEX);
+        //         // Serial.print(c&0x0f,HEX);
+        // }
 
         packet p;
         memset(&p, 0, sizeof(packet));
@@ -126,63 +125,39 @@ void loop()
         Serial.print(p.time);
         Serial.print(" : nFrame = ");
         Serial.println(p.frameNumber);
-
-        // Udp.flush();
-        // Udp.stop();
-
-        // delay(1);
-
-        // Udp.begin(outgoingPort);
-        // Udp.beginPacket(Udp.remoteIP(), outgoingPort);
-
-        // char buffer [50];
-        // int n=sprintf (buffer, "%lu", millis());
-
-        // Udp.write("I've been running for " );
-        // Udp.write(buffer);
-        // Udp.write(" milliseconds");
-        // Udp.endPacket();
-
-        // Udp.flush();
-        // Udp.stop();
-
-        // delay(1);
-        // Udp.begin(localPort);
+        // digitalWrite(led, HIGH);
 
 
+            // Serial.println();
 
-
-        Udp.flush();
-
-        Udp.stop();
-        delay(1);
-        Udp.begin(outgoingPort);
 
         Udp.beginPacket(Udp.remoteIP(), outgoingPort);
 
         char buffer [50];
-        int n=sprintf (buffer, "%lu", millis());
+        sprintf (buffer, "%lu", millis());
 
-        Udp.write("I've been running for " );
+        Udp.write("   (ms)\nI've been running for " );
         Udp.write(buffer);
-        Udp.write(" milliseconds");
         Udp.endPacket();
 
-        
-        Udp.stop();
-        delay(1);
-        Udp.begin(localPort);
-        
       }
+
     }
   }
 
+  t2.update(millis());
+  if (t2.bTimerFired()){
+    Serial.println("restarting!");
+    Udp.stop();
+    delay(1);
+    Udp.begin(localPort);
 
    
 
-  // }
+  }
 
   delay(5);
+
 
 }
 

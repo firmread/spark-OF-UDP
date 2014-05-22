@@ -3,27 +3,23 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-	udpSend.Create();
-	udpSend.Connect("192.168.2.48",8888);
-	udpSend.SetNonBlocking(true);
-    
-    udpRece.Create();
-    udpRece.Bind(7777);
-    udpRece.SetNonBlocking(true);
+	udp.Create();
+	udp.Connect("192.168.2.48",8888);
+    udp.Bind(7777);
+    udp.SetNonBlocking(true);
     
     delay = 500;
-    t.setup(delay);
+    t.setup(100);
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
 	char udpMessage[50];
-//	cout << udpRece.Receive(udpMessage,50) << endl;
     memset(udpMessage, 0, 50);
-    udpRece.Receive(udpMessage,50);
+    udp.Receive(udpMessage,50);
     
-//    udpRece
+//    udp
 	string message = udpMessage;
 	if(message!=""){
         cout << message << endl;
@@ -36,18 +32,18 @@ void ofApp::update(){
     
     
     
-//    //trigger
-//    t.update(ofGetElapsedTimeMillis());
-//    if (t.bTimerFired()){
-//        
-//        p.frameNumber = ofGetFrameNum();
-//        p.time = ofGetElapsedTimef();
-//        char packetBytes[sizeof(packet)];
-//        memcpy(packetBytes, &p, sizeof(packet));
-//        
-//        udpSend.Send(packetBytes,sizeof(packet));
-//
-//    }
+    //trigger
+    t.update(ofGetElapsedTimeMillis());
+    if (t.bTimerFired()){
+        
+        p.frameNumber = ofGetFrameNum();
+        p.time = ofGetElapsedTimef();
+        char packetBytes[sizeof(packet)];
+        memcpy(packetBytes, &p, sizeof(packet));
+        
+        udp.Send(packetBytes,sizeof(packet));
+
+    }
     
 }
 
@@ -73,7 +69,7 @@ void ofApp::keyPressed(int key){
     char packetBytes[sizeof(packet)];
     memcpy(packetBytes, &p, sizeof(packet));
 
-    udpSend.Send(packetBytes,sizeof(packet));
+    udp.Send(packetBytes,sizeof(packet));
     
 }
 

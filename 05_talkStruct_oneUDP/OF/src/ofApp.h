@@ -20,16 +20,17 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+  
+    ofxUDPManager udp;
+//    ofxUDPManager udpSend;
+//    ofxUDPManager udpRece;
     
-        ofxUDPManager udpSend;
-        ofxUDPManager udpRece;
-        
-        string bitmapstring;
-        bool bGotSth;
-        packet p;
-        
-        timer t;
-        
-        int delay;
+    string bitmapstring;
+    bool bGotSth;
+    packet p;
+    
+    timer t;
+    
+    int delay;
 };
 
