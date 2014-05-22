@@ -47,7 +47,7 @@ void loop()
     //     Serial.println(packetSize);
     // }
     
-    
+    Serial.println("hello");
     unsigned long nowsec = millis();
     if (nowsec >= (lastsec + delaysec)) {
         lastsec = nowsec;

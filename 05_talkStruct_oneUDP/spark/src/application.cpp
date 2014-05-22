@@ -95,7 +95,7 @@ void loop()
   t.update(millis());
 
   if (t.bTimerFired()){  
-    
+
     digitalWrite(led1, LOW);
     if (int nbytes = Udp.parsePacket()) {
       
@@ -127,12 +127,37 @@ void loop()
         Serial.print(" : nFrame = ");
         Serial.println(p.frameNumber);
 
+        // Udp.flush();
+        // Udp.stop();
+
+        // delay(1);
+
+        // Udp.begin(outgoingPort);
+        // Udp.beginPacket(Udp.remoteIP(), outgoingPort);
+
+        // char buffer [50];
+        // int n=sprintf (buffer, "%lu", millis());
+
+        // Udp.write("I've been running for " );
+        // Udp.write(buffer);
+        // Udp.write(" milliseconds");
+        // Udp.endPacket();
+
+        // Udp.flush();
+        // Udp.stop();
+
+        // delay(1);
+        // Udp.begin(localPort);
+
+
+
+
         Udp.flush();
+
         Udp.stop();
-
         delay(1);
-
         Udp.begin(outgoingPort);
+
         Udp.beginPacket(Udp.remoteIP(), outgoingPort);
 
         char buffer [50];
@@ -143,13 +168,12 @@ void loop()
         Udp.write(" milliseconds");
         Udp.endPacket();
 
-        Udp.flush();
+        
         Udp.stop();
-
         delay(1);
         Udp.begin(localPort);
+        
       }
-
     }
   }
 
