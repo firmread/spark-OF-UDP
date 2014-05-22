@@ -89,7 +89,7 @@ void setup()
 void loop()
 {
 
-  Serial.println(millis());
+  //Serial.println(millis());
     // check the device variable sizeof
     // Serial.println(sizeof(int));
     // Serial.println(sizeof(float));
@@ -104,12 +104,10 @@ void loop()
       
       if (nbytes != sizeof(packet)){
         Serial.println("bad packet ???");
-        Udp.flush();
-
       } else {
 
         memset(packetBuffer, 0, sizeof(packet));
-
+        
         Udp.read(packetBuffer,nbytes);
 
         for(int i=0;i<nbytes;i++) {
@@ -129,8 +127,12 @@ void loop()
         Serial.print(p.time);
         Serial.print(" : nFrame = ");
         Serial.println(p.frameNumber);
+        // digitalWrite(led, HIGH);
 
-        Udp.flush();
+
+            // Serial.println();
+
+
 
         UdpOut.beginPacket(Udp.remoteIP(), outgoingPort);
 
@@ -142,29 +144,29 @@ void loop()
         UdpOut.write(" milliseconds");
         UdpOut.endPacket();
 
+
+
         UdpOut.stop();
         delay(1);
         UdpOut.begin(outgoingPort);
-        
-        Udp.stop();
-        delay(1);
-        Udp.begin(localPort);
-//
-
       }
 
+      // digitalWrite(led, LOW);
+
     }
+      // ???????????? LOOKS SUPER WRONG!!!  
   }
 
-  // t2.update(millis());
-  // if (t2.bTimerFired()){
-  //   Serial.println("restarting!");
-   
-  //   Udp.flush();
+  t2.update(millis());
+  if (t2.bTimerFired()){
+    Serial.println("restarting!");
+    Udp.stop();
+    delay(1);
+    Udp.begin(localPort);
 
    
 
-  // }
+  }
 
   delay(5);
 

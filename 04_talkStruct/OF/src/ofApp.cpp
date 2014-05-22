@@ -12,7 +12,7 @@ void ofApp::setup(){
     udpRece.SetNonBlocking(true);
     
     delay = 500;
-    t.setup(delay);
+    t.setup(100);
 }
 
 //--------------------------------------------------------------
@@ -36,18 +36,18 @@ void ofApp::update(){
     
     
     
-//    //trigger
-//    t.update(ofGetElapsedTimeMillis());
-//    if (t.bTimerFired()){
-//        
-//        p.frameNumber = ofGetFrameNum();
-//        p.time = ofGetElapsedTimef();
-//        char packetBytes[sizeof(packet)];
-//        memcpy(packetBytes, &p, sizeof(packet));
-//        
-//        udpSend.Send(packetBytes,sizeof(packet));
-//
-//    }
+    //trigger
+    t.update(ofGetElapsedTimeMillis());
+    if (t.bTimerFired()){
+        
+        p.frameNumber = ofGetFrameNum();
+        p.time = ofGetElapsedTimef();
+        char packetBytes[sizeof(packet)];
+        memcpy(packetBytes, &p, sizeof(packet));
+        
+        udpSend.Send(packetBytes,sizeof(packet));
+
+    }
     
 }
 
