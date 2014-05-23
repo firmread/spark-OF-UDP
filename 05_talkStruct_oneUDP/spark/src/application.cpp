@@ -32,11 +32,33 @@ public:
 
 };
 
-//packet structs
+
+
+
+
+//OF send out to spark
 typedef struct {
-  float time;
-  int frameNumber;    
+    float time;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    
 } packet;
+
+
+
+//spark send back to OF
+typedef struct {
+    unsigned long millisRunning;
+    int ip;
+
+    // string uuid;
+    //unsigned int deviceID;
+    // unsigned char deviceID[12];
+    // byte macAddress[6];
+    unsigned char uuid[24];
+
+} returnPacket;
 
 
 
@@ -52,14 +74,10 @@ int led = D0;
 const int PACKET_SIZE = 12;
 byte  packetBuffer[PACKET_SIZE]; 
 
-// unsigned long lastsec;
-// int delaysec = 100;
-
 // An UDP instance to let us send and receive packets over UDP
 UDP Udp;
 
 // IPAddress ip(192, 168, 2, 24);
-
 timer t, t2;
 
 
@@ -88,12 +106,17 @@ void setup()
 void loop()
 {
 
-  //Serial.println(millis());
-    // check the device variable sizeof
-    // Serial.println(sizeof(int));
-    // Serial.println(sizeof(float));
-    // Serial.println(millis());
-
+  // unsigned char temp[8];
+  // IPAddress tempIP = Network.localIP();
+  // memset(temp, 0, 8);
+  // memcpy(temp, &tempIP, 8);
+  // Serial.println(temp);
+  // Serial.println(ID1);
+  // int temp;
+  // memset(&temp,0, )
+  // memcpy()
+// Serial.println(Network.macAddress());
+  // Serial.println(Spark.deviceID());
   t.update(millis());
 
   if (t.bTimerFired()){ 
@@ -108,36 +131,44 @@ void loop()
         
         Udp.read(packetBuffer,nbytes);
 
-        // for(int i=0;i<nbytes;i++) {
-        //   char c = (char)packetBuffer[i];
-        //         // Serial.print(c);
-
-        //         // Serial.print(c>>4,HEX);
-        //         // Serial.print(c&0x0f,HEX);
-        // }
 
         packet p;
         memset(&p, 0, sizeof(packet));
         memcpy(&p, packetBuffer, sizeof(packet));
 
         Serial.print(Udp.remoteIP());
-        Serial.print(" : time = ");
-        Serial.print(p.time);
-        Serial.print(" : nFrame = ");
-        Serial.println(p.frameNumber);
-        // digitalWrite(led, HIGH);
+        Serial.print("r: ");
+        Serial.print(p.r);
+        Serial.print("g: ");
+        Serial.print(p.g);
+        Serial.print("b: ");
+        Serial.print(p.b);
+        Serial.print("time: ");
+        Serial.println(p.time);
 
 
-            // Serial.println();
-
+        returnPacket rp;
+        //time
+        rp.millisRunning = millis();
+        //ip
+        IPAddress addr = Network.localIP();
+        unsigned char a = addr[0];
+        unsigned char b = addr[1];
+        unsigned char c = addr[2];
+        unsigned char d = addr[3];
+        int addressAsInt = a << 24 | b << 16 | c << 8 | d;
+        rp.ip = addressAsInt;
+        //id
+        String uuidTemp = Spark.deviceID();
+        memcpy(rp.uuid,uuidTemp.c_str(),uuidTemp.length());
 
         Udp.beginPacket(Udp.remoteIP(), outgoingPort);
 
-        char buffer [50];
-        sprintf (buffer, "%lu", millis());
 
-        Udp.write("   (ms)\nI've been running for " );
-        Udp.write(buffer);
+        unsigned char packetBytes[sizeof(returnPacket)];
+        memcpy(packetBytes, &rp, sizeof(returnPacket));
+
+        Udp.write(packetBytes,sizeof(returnPacket));
         Udp.endPacket();
 
       }

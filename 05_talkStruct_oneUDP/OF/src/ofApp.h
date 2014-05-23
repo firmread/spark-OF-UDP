@@ -25,12 +25,16 @@ class ofApp : public ofBaseApp{
 //    ofxUDPManager udpSend;
 //    ofxUDPManager udpRece;
     
-    string bitmapstring;
+    string line1, line2, line3;
     bool bGotSth;
     packet p;
+    returnPacket rp;
     
     timer t;
     
     int delay;
+    
+    int ip[4];
+    string uuid;
 };
 
