@@ -23,18 +23,18 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
   
-    ofxUDPManager udp;
-    
-    string line1, line2, line3;
-    bool bGotSth;
-    ofToSparkyPacket p;
-    sparkyToOFPacket rp;
-    
-    timer t;
-    
-    int delay;
-    
-    int ip[4];
-    string uuid;
+        ofxUDPManager udp;
+
+        string line1, line2, line3;
+        bool bGotSth;
+        ofToSparkyPacket p;
+        sparkyToOFPacket rp;
+
+        timer t;
+
+        int delay;
+
+        int ip[4];
+        string uuid;
 };
 

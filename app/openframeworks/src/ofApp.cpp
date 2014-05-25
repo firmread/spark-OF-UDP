@@ -5,6 +5,8 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    
+    
 	udp.Create();
 	udp.Connect("192.168.2.17",8888);
     udp.Bind(7777);
@@ -61,20 +63,20 @@ void ofApp::update(){
     
     
     
-    // time trigger
-    // packing packet to spark
-    t.update(ofGetElapsedTimeMillis());
-    if (t.bTimerFired()){
-        p.time = ofGetElapsedTimef();
-        p.r = mouseX;
-        p.g = mouseY;
-        p.b = mouseX + mouseY;
-        
-        char packetBytes[sizeof(ofToSparkyPacket)];
-        memcpy(packetBytes, &p, sizeof(ofToSparkyPacket));
-        udp.Send(packetBytes,sizeof(ofToSparkyPacket));
-
-    }
+//    // time trigger
+//    // packing packet to spark
+//    t.update(ofGetElapsedTimeMillis());
+//    if (t.bTimerFired()){
+//        p.time = ofGetElapsedTimef();
+//        p.r = mouseX;
+//        p.g = mouseY;
+//        p.b = mouseX + mouseY;
+//        
+//        char packetBytes[sizeof(ofToSparkyPacket)];
+//        memcpy(packetBytes, &p, sizeof(ofToSparkyPacket));
+//        udp.Send(packetBytes,sizeof(ofToSparkyPacket));
+//
+//    }
     
 }
 
@@ -92,6 +94,28 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     
+    
+    if (key == ' '){
+        
+        // let's do discovery:
+        
+        memset(&p, 0, sizeof(ofToSparkyPacket));
+        p.packetType = PACKET_TYPE_DISCOVERY;
+        p.time = ofGetElapsedTimef();
+        char packetBytes[sizeof(ofToSparkyPacket)];
+        memcpy(packetBytes, &p, sizeof(ofToSparkyPacket));
+        
+        ofxUDPManager udp4discovery;
+        
+        for (int i = 0; i < 256; i++){
+            udp4discovery.Create();
+            string IP = "192.168.2." + ofToString(i);
+            udp4discovery.Connect(IP.c_str(),8888);
+            udp4discovery.SetNonBlocking(true);
+            udp4discovery.Send(packetBytes,sizeof(ofToSparkyPacket));
+        }
+        
+    }
     
 }
 
@@ -112,7 +136,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    delay = ofMap(x, 0, ofGetWidth(), 100, 1000, true);
+
 }
 
 //--------------------------------------------------------------

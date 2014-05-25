@@ -109,34 +109,43 @@ void handlePacket( byte * data){
     memset(&O2Spacket, 0, INCOMING_PACKET_SIZE);
     memcpy(&O2Spacket, data, INCOMING_PACKET_SIZE);
     
-    Serial.print(Udp.remoteIP());
-    Serial.print("r: ");
-    Serial.print(O2Spacket.r);
-    Serial.print("g: ");
-    Serial.print(O2Spacket.g);
-    Serial.print("b: ");
-    Serial.print(O2Spacket.b);
-    Serial.print("time: ");
-    Serial.println(O2Spacket.time);
+    if (O2Spacket.packetType == PACKET_TYPE_DISCOVERY || O2Spacket.packetType == PACKET_TYPE_HEARTBEAT){
+        
+        // this is the
+        S2Opacket.millisRunning = millis();
+        IPAddress addr = Network.localIP();
+        unsigned char a = addr[0];
+        unsigned char b = addr[1];
+        unsigned char c = addr[2];
+        unsigned char d = addr[3];
+        int addressAsInt = a << 24 | b << 16 | c << 8 | d;
+        S2Opacket.ip = addressAsInt;
+        String uuidTemp = Spark.deviceID();
+        memcpy(S2Opacket.uuid,uuidTemp.c_str(),uuidTemp.length());
+        Udp.beginPacket(Udp.remoteIP(), outgoingPort);
+        memcpy(packetBufferOutgoing, &S2Opacket, OUTGOING_PACKET_SIZE);
+        Udp.write(packetBufferOutgoing, OUTGOING_PACKET_SIZE);
+        Udp.endPacket();
+        
+    } else if (O2Spacket.packetType == PACKET_TYPE_COLOR){
+        
+        // don't respond, right?
+        
+        
+    }
+    
+//    Serial.print(Udp.remoteIP());
+//    Serial.print("r: ");
+//    Serial.print(O2Spacket.r);
+//    Serial.print("g: ");
+//    Serial.print(O2Spacket.g);
+//    Serial.print("b: ");
+//    Serial.print(O2Spacket.b);
+//    Serial.print("time: ");
+//    Serial.println(O2Spacket.time);
     
     // S->O packet
     
-    S2Opacket.millisRunning = millis();
-    IPAddress addr = Network.localIP();
-    unsigned char a = addr[0];
-    unsigned char b = addr[1];
-    unsigned char c = addr[2];
-    unsigned char d = addr[3];
-    int addressAsInt = a << 24 | b << 16 | c << 8 | d;
-    S2Opacket.ip = addressAsInt;
-    String uuidTemp = Spark.deviceID();
-    memcpy(S2Opacket.uuid,uuidTemp.c_str(),uuidTemp.length());
-    Udp.beginPacket(Udp.remoteIP(), outgoingPort);
-
-    memcpy(packetBufferOutgoing, &S2Opacket, OUTGOING_PACKET_SIZE);
-    
-    Udp.write(packetBufferOutgoing, OUTGOING_PACKET_SIZE);
-    Udp.endPacket();
     
     
     

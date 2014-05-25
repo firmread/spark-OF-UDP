@@ -1,8 +1,11 @@
 
 
 
+
+
+
 typedef struct {
-    unsigned char packetType;       // 0 = whoareyou 1=heartbear  2=
+    unsigned char packetType;       // 0 = discovery 1=heartbear  2=
     float time;
     unsigned char r;
     unsigned char g;
