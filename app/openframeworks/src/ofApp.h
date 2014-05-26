@@ -3,38 +3,46 @@
 #include "ofMain.h"
 #include "ofxNetwork.h"
 #include "timer.h"
+#include "spark.h"
 #include "../../common/communicationDefines.h"
 #include "../../common/communicationTypes.h"
 
+
 class ofApp : public ofBaseApp{
 
-	public:
-		void setup();
-		void update();
-		void draw();
+public:
+    void setup();
+    void update();
+    void draw();
 
-		void keyPressed(int key);
-		void keyReleased(int key);
-		void mouseMoved(int x, int y );
-		void mouseDragged(int x, int y, int button);
-		void mousePressed(int x, int y, int button);
-		void mouseReleased(int x, int y, int button);
-		void windowResized(int w, int h);
-		void dragEvent(ofDragInfo dragInfo);
-		void gotMessage(ofMessage msg);
-  
-        ofxUDPManager udp;
+    void keyPressed(int key);
+    void keyReleased(int key);
+    void mouseMoved(int x, int y );
+    void mouseDragged(int x, int y, int button);
+    void mousePressed(int x, int y, int button);
+    void mouseReleased(int x, int y, int button);
+    void windowResized(int w, int h);
+    void dragEvent(ofDragInfo dragInfo);
+    void gotMessage(ofMessage msg);
 
-        string line1, line2, line3;
-        bool bGotSth;
-        ofToSparkyPacket p;
-        sparkyToOFPacket rp;
+    //listen to all new faces
+    ofxUDPManager udp;
+    //handle known sparks,, old faces
+    vector < spark > sparks;
 
-        timer t;
+    bool bGotSth;
+    
+    //discovery
+    ofToSparkyPacket O2Spacket;
+    //heartbeat
+    sparkyToOFPacket S2Opacket;
 
-        int delay;
+    
+    timer t;
 
-        int ip[4];
-        string uuid;
+    int delay;
+    int ip[4];
+    int getOfIpInt();
+    string convertIpToString(int ip);
+    void fireDiscovery();
 };
-

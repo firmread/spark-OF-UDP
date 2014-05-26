@@ -55,6 +55,8 @@ void loop(){
     
     if (bOnline == true && bOnlinePrev == false){
         Udp.begin(localPort);
+    } else if (bOnline == false && bOnlinePrev == true){
+        Udp.stop();
     }
     
     //----------------------- do some different stuff:
@@ -108,6 +110,20 @@ void handlePacket( byte * data){
     
     memset(&O2Spacket, 0, INCOMING_PACKET_SIZE);
     memcpy(&O2Spacket, data, INCOMING_PACKET_SIZE);
+
+
+    // O2Spacket.serverIp[]
+    IPAddress serverIp;
+    serverIp[0] = O2Spacket.ofIp >> 24 & 0xFF;
+    serverIp[1] = O2Spacket.ofIp >> 16 & 0xFF;
+    serverIp[2] = O2Spacket.ofIp >> 8 & 0xFF;
+    serverIp[3] = O2Spacket.ofIp & 0xFF;
+
+
+    Serial.println(serverIp[0]);
+    Serial.println(serverIp[1]);
+    Serial.println(serverIp[2]);
+    Serial.println(serverIp[3]);
     
     if (O2Spacket.packetType == PACKET_TYPE_DISCOVERY || O2Spacket.packetType == PACKET_TYPE_HEARTBEAT){
         
@@ -119,13 +135,15 @@ void handlePacket( byte * data){
         unsigned char c = addr[2];
         unsigned char d = addr[3];
         int addressAsInt = a << 24 | b << 16 | c << 8 | d;
-        S2Opacket.ip = addressAsInt;
+        S2Opacket.ipSpark = addressAsInt;
         String uuidTemp = Spark.deviceID();
         memcpy(S2Opacket.uuid,uuidTemp.c_str(),uuidTemp.length());
-        Udp.beginPacket(Udp.remoteIP(), outgoingPort);
+        Udp.beginPacket(serverIp, outgoingPort);
         memcpy(packetBufferOutgoing, &S2Opacket, OUTGOING_PACKET_SIZE);
         Udp.write(packetBufferOutgoing, OUTGOING_PACKET_SIZE);
         Udp.endPacket();
+
+
         
     } else if (O2Spacket.packetType == PACKET_TYPE_COLOR){
         
