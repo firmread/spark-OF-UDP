@@ -22,14 +22,11 @@ std::string exec(const char* cmd) {
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+    ofSetCircleResolution(100);
     
 	udp.Create();
 	udp.Bind(7777);
     udp.SetNonBlocking(true);
-    
-    
-    
     
 }
 
@@ -48,7 +45,7 @@ void ofApp::update(){
         bGotSth = true;
         
         cout << "got data" << endl;
-        //check info
+        //get info to packet
         memset(&S2Opacket, 0, sizeof(sparkyToOFPacket));
         memcpy(&S2Opacket, udpMessage, sizeof(sparkyToOFPacket));
         
@@ -56,6 +53,7 @@ void ofApp::update(){
         cout << S2Opacket.millisRunning << endl;
         
         //ip
+        int ip[4];
         ip[0] = S2Opacket.ipSpark >> 24 & 0xFF;
         ip[1] = S2Opacket.ipSpark >> 16 & 0xFF;
         ip[2] = S2Opacket.ipSpark >> 8 & 0xFF;
@@ -75,21 +73,15 @@ void ofApp::update(){
             }
         }
         
+        // register it if we never seen it before
         if (!bDoesThisSparkExist){
             spark temp;
 
-            temp.udp.Create();
-            temp.udp.Connect(tempIp.c_str(),8888);
-            temp.udp.Bind(7777);
-            temp.udp.SetNonBlocking(true);
-            temp.ip = tempIp;
-            temp.uuid = uuid;
-            temp.millisAlive = S2Opacket.millisRunning;
-            temp.nPacketsReceived++;
             cout << "create the first object " << tempIp << endl;
             
             sparks.push_back(temp);
             
+        // otherwise, welcome back our beloved sparky!  !
         } else {
             
             for (int i = 0; i< sparks.size(); i++) {
@@ -113,12 +105,11 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    if (bGotSth) ofBackground(255,0,0);
-    else ofBackground(200);
     
+    
+    ofBackgroundGradient(80, 0);
     string sparksNo = ofToString(sparks.size());
 
-    
     for (int i =0; i< sparks.size(); i++){
         sparks[i].draw(100, 100+100*i);
     }
@@ -141,7 +132,7 @@ void ofApp::fireDiscovery(){
     
     memset(&O2Spacket, 0, sizeof(ofToSparkyPacket));
     O2Spacket.packetType = PACKET_TYPE_DISCOVERY;
-    O2Spacket.time = ofGetElapsedTimef();
+    O2Spacket.ofPacketSentOutTime = ofGetElapsedTimef();
     O2Spacket.ofIp = getOfIpInt();
     char packetBytes[sizeof(ofToSparkyPacket)];
     memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));

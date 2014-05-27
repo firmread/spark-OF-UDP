@@ -1,12 +1,9 @@
 
 #pragma once
 
-
-
-
 typedef struct {
     unsigned char packetType;       // 0 = discovery 1=heartbear  2=
-    float time;
+    float ofPacketSentOutTime;
     int ofIp;
     unsigned char r;
     unsigned char g;
@@ -18,6 +15,7 @@ typedef struct {
 //spark send back to OF
 typedef struct {
     unsigned long millisRunning;
+    float ofPacketSentOutTime;
     int ipSpark;
     unsigned char uuid[24];
     

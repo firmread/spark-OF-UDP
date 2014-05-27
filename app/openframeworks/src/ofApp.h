@@ -41,7 +41,6 @@ public:
     timer t;
 
     int delay;
-    int ip[4];
     int getOfIpInt();
     string convertIpToString(int ip);
     void fireDiscovery();

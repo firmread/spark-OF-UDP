@@ -25,6 +25,10 @@ public:
         }
     }
     
+    void setTimer(float newMillisToFire){
+        millisTimer = newMillisToFire;
+    }
+    
     bool bTimerFired(){
         return bFiredThisFrame;
     }

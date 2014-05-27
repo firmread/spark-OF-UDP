@@ -127,8 +127,9 @@ void handlePacket( byte * data){
     
     if (O2Spacket.packetType == PACKET_TYPE_DISCOVERY || O2Spacket.packetType == PACKET_TYPE_HEARTBEAT){
         
-        // this is the
+        // send packet back
         S2Opacket.millisRunning = millis();
+        S2Opacket.ofPacketSentOutTime = O2Spacket.ofPacketSentOutTime;
         IPAddress addr = Network.localIP();
         unsigned char a = addr[0];
         unsigned char b = addr[1];

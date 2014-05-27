@@ -21,7 +21,8 @@ public:
     
 //    void setup();
     spark();
-    void init();
+    
+    void setup(sparkyToOFPacket s2oInit);
     void update();
     void draw(int x, int y);
      
@@ -32,11 +33,10 @@ public:
     float lastContactTime;
     int nPacketsReceived;
     
-    float sendPacketOutTime;
-    float getPacketBackTime;
-    float deltaTimeRoundTrip;
+    float transferTime;
     
-    float checkRoundtripTime;
+    bool bGotPacket;
+    float fadingBeep;
     
     string uuid;
     ofxUDPManager udp;
@@ -44,6 +44,7 @@ public:
     sparkyToOFPacket s2o;
     
     timer t;
+    float heartRate;
     
 };
 
