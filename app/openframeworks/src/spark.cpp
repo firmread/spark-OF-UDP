@@ -19,18 +19,21 @@ spark::spark(){
 
 void spark::setup(sparkyToOFPacket s2oInit){
     
-    udp.Create();
-    udp.Connect(tempIp.c_str(),8888);
-    udp.Bind(7777);
-    udp.SetNonBlocking(true);
-    temp.ip = tempIp;
-    temp.uuid = uuid;
-    temp.millisAlive = S2Opacket.millisRunning;
-    temp.nPacketsReceived++;
+
+    
+//    udp.Create();
+//    udp.Connect(tempIp.c_str(),8888);
+//    udp.Bind(7777);
+//    udp.SetNonBlocking(true);
+//    temp.ip = tempIp;
+//    temp.uuid = uuid;
+//    temp.millisAlive = S2Opacket.millisRunning;
+//    temp.nPacketsReceived++;
 }
 
 
-void spark::update(){
+void spark::update(sparkyToOFPacket s2oRead){
+    //beat
     if(t.bTimerFired()){
         
     }
@@ -58,7 +61,7 @@ void spark::draw(int x, int y){
     ofSetColor(200);
     ofDrawBitmapString(   "uuid    :" + ofToString(uuid) +
                         "\nip      :" + ofToString(ip) +
-                        "\nmsAlive :" + ofToString(millisAlive) +
+                        "\nmsAlive :" + ofToString(millisRunning) +
                         "\npkg recv:" + ofToString(nPacketsReceived) +
                         "\ntransfT :" + ofToString(transferTime), 0,0);
     
@@ -78,24 +81,12 @@ void spark::readPacketFromSpark(char * udpMessage){
     memset(&s2o, 0, sizeof(sparkyToOFPacket));
     memcpy(&s2o, udpMessage, sizeof(sparkyToOFPacket));
     
-    //time
-    millisAlive = s2o.millisRunning;
+    packetHandler ph;
+    ph.parse(s2o);
+    millisRunning = ph.millisRunning;
+    uuid = ph.uuid;
     
-    //transfer time
-    transferTime = s2o.ofPacketSentOutTime - ofGetElapsedTimef();
-    
-    //ip
-    ip[0] = s2o.ipSpark >> 24 & 0xFF;
-    ip[1] = s2o.ipSpark >> 16 & 0xFF;
-    ip[2] = s2o.ipSpark >> 8 & 0xFF;
-    ip[3] = s2o.ipSpark & 0xFF;
-    
-    string ip = ofToString(ip[0]) + "." + ofToString(ip[1]) + "."
-    + ofToString(ip[2]) + "." + ofToString(ip[3]);
-    
-    //uuid
-    string temp( s2o.uuid, s2o.uuid + sizeof s2o.uuid / sizeof s2o.uuid[0] );
-    uuid = temp;
+    ip = ph.ipSparkString;
     
     
     

@@ -15,6 +15,7 @@
 #include "communicationTypes.h"
 #include "communicationDefines.h"
 #include "timer.h"
+#include "packetHandler.h"
 
 class spark{
 public:
@@ -23,13 +24,13 @@ public:
     spark();
     
     void setup(sparkyToOFPacket s2oInit);
-    void update();
+    void update(sparkyToOFPacket s2oRead);
     void draw(int x, int y);
      
 //    void sendPacketToSpark(ofToSparkyPacket o2s);
     void readPacketFromSpark(char * udpMessage);
     
-    int millisAlive;
+    int millisRunning;
     float lastContactTime;
     int nPacketsReceived;
     

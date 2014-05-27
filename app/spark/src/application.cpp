@@ -9,7 +9,6 @@ unsigned int localPort      = SPARKY_INCOMING_PORT;
 unsigned int outgoingPort   = SPARKY_OUTGOING_PORT;
 int led                     = D0;
 
-
 const int INCOMING_PACKET_SIZE = sizeof(ofToSparkyPacket);
 const int OUTGOING_PACKET_SIZE = sizeof(sparkyToOFPacket);
 

@@ -4,6 +4,8 @@
 #include "ofxNetwork.h"
 #include "timer.h"
 #include "spark.h"
+#include "getOfLocalIp.h"
+#include "packetHandler.h"
 #include "../../common/communicationDefines.h"
 #include "../../common/communicationTypes.h"
 
@@ -41,7 +43,7 @@ public:
     timer t;
 
     int delay;
-    int getOfIpInt();
+//    int getOfIpInt();
     string convertIpToString(int ip);
     void fireDiscovery();
 };

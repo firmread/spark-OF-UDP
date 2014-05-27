@@ -1,25 +1,6 @@
 #include "ofApp.h"
 
 
-//find out my ip through this cmd!
-std::string exec(const char* cmd) {
-    
-    FILE* pipe = popen(cmd, "r");
-    if (!pipe) return "ERROR";
-    char buffer[128];
-    std::string result = "";
-    while(!feof(pipe)) {
-        
-        if(fgets(buffer, 128, pipe) != NULL)
-            result += buffer;
-    }
-    
-    pclose(pipe);
-    return result;
-    
-}
-
-
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetCircleResolution(100);
@@ -49,26 +30,31 @@ void ofApp::update(){
         memset(&S2Opacket, 0, sizeof(sparkyToOFPacket));
         memcpy(&S2Opacket, udpMessage, sizeof(sparkyToOFPacket));
         
-        //time
-        cout << S2Opacket.millisRunning << endl;
         
-        //ip
-        int ip[4];
-        ip[0] = S2Opacket.ipSpark >> 24 & 0xFF;
-        ip[1] = S2Opacket.ipSpark >> 16 & 0xFF;
-        ip[2] = S2Opacket.ipSpark >> 8 & 0xFF;
-        ip[3] = S2Opacket.ipSpark & 0xFF;
-        cout << ip[0] << "." << ip[1]<< "." << ip[2]<< "."<< ip[3]<< endl;
-        string tempIp = ofToString(ip[0]) + "." + ofToString(ip[1]) + "."
-        + ofToString(ip[2]) + "." + ofToString(ip[3]);
-        
-        //uuid
-        string uuid( S2Opacket.uuid, S2Opacket.uuid + sizeof S2Opacket.uuid / sizeof S2Opacket.uuid[0] );
-        cout << uuid << endl;
+        packetHandler ph;
+        ph.parse(S2Opacket);
+//        
+//        //time
+//        cout << S2Opacket.millisRunning << endl;
+//        
+//        //ip
+//        int ip[4];
+//        ip[0] = S2Opacket.ipSpark >> 24 & 0xFF;
+//        ip[1] = S2Opacket.ipSpark >> 16 & 0xFF;
+//        ip[2] = S2Opacket.ipSpark >> 8 & 0xFF;
+//        ip[3] = S2Opacket.ipSpark & 0xFF;
+//        cout << ip[0] << "." << ip[1]<< "." << ip[2]<< "."<< ip[3]<< endl;
+//        string tempIp = ofToString(ip[0]) + "." + ofToString(ip[1]) + "."
+//        + ofToString(ip[2]) + "." + ofToString(ip[3]);
+//        
+//        //uuid
+//        string uuid( S2Opacket.uuid, S2Opacket.uuid + sizeof S2Opacket.uuid / sizeof S2Opacket.uuid[0] );
+//        cout << uuid << endl;
         
         bool bDoesThisSparkExist = false;
         for (int i = 0; i < sparks.size(); i++){
-            if (sparks[i].ip == tempIp){
+            if (sparks[i].ip == ph.ipSparkString){
+                cout << "ph.ipSparkString" << i << ph.ipSparkString << endl;
                 bDoesThisSparkExist = true;
             }
         }
@@ -76,8 +62,8 @@ void ofApp::update(){
         // register it if we never seen it before
         if (!bDoesThisSparkExist){
             spark temp;
-
-            cout << "create the first object " << tempIp << endl;
+            temp.setup(S2Opacket);
+            cout << "create the first object " << ph.ipSparkString << endl;
             
             sparks.push_back(temp);
             
@@ -85,7 +71,7 @@ void ofApp::update(){
         } else {
             
             for (int i = 0; i< sparks.size(); i++) {
-                if(sparks[i].ip == tempIp){
+                if(sparks[i].ip == ph.ipSparkString){
                     sparks[i].readPacketFromSpark(udpMessage);
                     /*sparks[i].millisAlive = S2Opacket.millisRunning;
                     sparks[i].nPacketsReceived++;
@@ -133,7 +119,8 @@ void ofApp::fireDiscovery(){
     memset(&O2Spacket, 0, sizeof(ofToSparkyPacket));
     O2Spacket.packetType = PACKET_TYPE_DISCOVERY;
     O2Spacket.ofPacketSentOutTime = ofGetElapsedTimef();
-    O2Spacket.ofIp = getOfIpInt();
+    getOfLocalIp readIp;
+    O2Spacket.ofIp = readIp.getInt();
     char packetBytes[sizeof(ofToSparkyPacket)];
     memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));
     
@@ -164,54 +151,24 @@ void ofApp::fireDiscovery(){
 
 
 
-int ofApp::getOfIpInt(){
-    
-    string execReturn = exec("ifconfig | grep -E \"inet ([0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3})\" | awk \'{print $2}\'");
-    
-    vector <string> allIp = ofSplitString(execReturn, "\n");
-    string localIp;
-    
-    // parsing works,, not sure if it would works in every case tho
-    for (int i=0; i<allIp.size(); i++) {
-        vector <string> ipBreakdown = ofSplitString(allIp[i],".");
-        if (ipBreakdown[0] == "192") {
-            localIp = allIp[i];
-            break;
-        }
-        else if (ipBreakdown[0]!= "127") {
-            localIp = allIp[i];
-            break;
-        }
-    }
-    
-    vector<string> ipBreakdown = ofSplitString(localIp, ".");
-    unsigned char a = ofToInt(ipBreakdown[0]);
-    unsigned char b = ofToInt(ipBreakdown[1]);
-    unsigned char c = ofToInt(ipBreakdown[2]);
-    unsigned char d = ofToInt(ipBreakdown[3]);
-    
-    int addressAsInt = a << 24 | b << 16 | c << 8 | d;
 
-    return addressAsInt;
-}
-
-
-string ofApp::convertIpToString(int ip){
-    
-    
-    int temp[4];
-    temp[0] = ip >> 24 & 0xFF;
-    temp[1] = ip >> 16 & 0xFF;
-    temp[2] = ip >> 8 & 0xFF;
-    temp[3] = ip & 0xFF;
-    cout << temp[0] << "." << temp[1]<< "." << temp[2]<< "."<< temp[3]<< endl;
-    
-    
-    string tempIp = ofToString(temp[0]) + "." + ofToString(temp[1]) + "."
-    + ofToString(temp[2]) + "." + ofToString(temp[3]);
-
-    return tempIp;
-}
+//
+//string ofApp::convertIpToString(int ip){
+//    
+//    
+//    int temp[4];
+//    temp[0] = ip >> 24 & 0xFF;
+//    temp[1] = ip >> 16 & 0xFF;
+//    temp[2] = ip >> 8 & 0xFF;
+//    temp[3] = ip & 0xFF;
+//    cout << temp[0] << "." << temp[1]<< "." << temp[2]<< "."<< temp[3]<< endl;
+//    
+//    
+//    string tempIp = ofToString(temp[0]) + "." + ofToString(temp[1]) + "."
+//    + ofToString(temp[2]) + "." + ofToString(temp[3]);
+//
+//    return tempIp;
+//}
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
