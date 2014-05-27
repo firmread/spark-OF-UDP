@@ -53,7 +53,7 @@ void ofApp::update(){
         bool bDoesThisSparkExist = false;
         for (int i = 0; i < sparks.size(); i++){
             if (sparks[i].ip == ph.ipSparkString){
-                cout << "ph.ipSparkString" << i << sparks[i].ip << endl;
+                cout << "ph.ipSparkString : " << i << " : " << sparks[i].ip << endl;
                 bDoesThisSparkExist = true;
             }
         }
@@ -62,6 +62,16 @@ void ofApp::update(){
         if (!bDoesThisSparkExist){
             spark temp;
             //temp.setup(S2Opacket);
+            
+            /*
+            
+             << this is not working!!!
+            vector is passing by copy
+            udp is a complicate things << therefore copy won't work
+            it could works in this sequence only if it's a vector of pointer
+             
+             */
+            
             cout << "create object for " << ph.ipSparkString << endl;
             
             sparks.push_back(temp);
