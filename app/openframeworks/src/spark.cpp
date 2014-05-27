@@ -19,26 +19,41 @@ spark::spark(){
 
 void spark::setup(sparkyToOFPacket s2oInit){
     
-
+    packetHandler ph(s2oInit);
+//    ph.parse(s2oInit);
     
-//    udp.Create();
-//    udp.Connect(tempIp.c_str(),8888);
-//    udp.Bind(7777);
-//    udp.SetNonBlocking(true);
-//    temp.ip = tempIp;
-//    temp.uuid = uuid;
-//    temp.millisAlive = S2Opacket.millisRunning;
-//    temp.nPacketsReceived++;
+    udp.Create();
+    udp.Connect(ph.ipSparkString.c_str(), 8888);
+    
+    udp.SetNonBlocking(true);
+    ip = ph.ipSparkString;
+    cout << ph.ipSparkString << endl;
+    cout << "my ip is " << ip << endl;
+    uuid = ph.uuid;
+    millisRunning = ph.millisRunning;
+    nPacketsReceived = 1;
+
 }
 
 
-void spark::update(sparkyToOFPacket s2oRead){
+void spark::update(){
     //beat
-    if(t.bTimerFired()){
-        
-    }
     
     t.setTimer(heartRate);
+    t.update(ofGetElapsedTimeMillis());
+    if(t.bTimerFired()){
+        memset(&o2s, 0, sizeof(ofToSparkyPacket));
+        o2s.packetType = PACKET_TYPE_HEARTBEAT;
+        o2s.ofPacketSentOutTime = ofGetElapsedTimef();
+        getOfLocalIp readIp;
+        o2s.ofIp = readIp.getInt();
+        
+        char packetBytes[sizeof(ofToSparkyPacket)];
+        memcpy(packetBytes, &o2s, sizeof(ofToSparkyPacket));
+
+        udp.Send(packetBytes,sizeof(ofToSparkyPacket));
+
+    }
     
     // add timer
     // do heartbeat
@@ -74,20 +89,21 @@ void spark::draw(int x, int y){
 //    
 //}
 
-void spark::readPacketFromSpark(char * udpMessage){
-    
+//void spark::readPacketFromSpark(char * udpMessage){
+void spark::readPacketFromSpark(sparkyToOFPacket s2oRead){
+
     bGotPacket = true;
-    //pass data to local variables
-    memset(&s2o, 0, sizeof(sparkyToOFPacket));
-    memcpy(&s2o, udpMessage, sizeof(sparkyToOFPacket));
-    
-    packetHandler ph;
-    ph.parse(s2o);
+//    //pass data to local variables
+//    memset(&s2o, 0, sizeof(sparkyToOFPacket));
+//    memcpy(&s2o, udpMessage, sizeof(sparkyToOFPacket));
+
+    packetHandler ph(s2oRead);
     millisRunning = ph.millisRunning;
     uuid = ph.uuid;
     
     ip = ph.ipSparkString;
     
-    
+    nPacketsReceived++;
+    transferTime = ofGetElapsedTimef() - ph.ofPacketSentOutTime;
     
 }

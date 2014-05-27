@@ -40,7 +40,7 @@ public:
     sparkyToOFPacket S2Opacket;
 
     
-    timer t;
+    timer heart;
 
     int delay;
 //    int getOfIpInt();

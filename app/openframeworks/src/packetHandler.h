@@ -15,8 +15,8 @@
 
 class packetHandler{
 public:
-    void parse(ofToSparkyPacket o2s);
-    void parse(sparkyToOFPacket s2o);
+    packetHandler(ofToSparkyPacket o2s);
+    packetHandler(sparkyToOFPacket s2o);
     
     bool bIsO2S;
     

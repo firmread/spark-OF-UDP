@@ -15,6 +15,7 @@
 #include "communicationTypes.h"
 #include "communicationDefines.h"
 #include "timer.h"
+#include "getOfLocalIp.h"
 #include "packetHandler.h"
 
 class spark{
@@ -24,11 +25,12 @@ public:
     spark();
     
     void setup(sparkyToOFPacket s2oInit);
-    void update(sparkyToOFPacket s2oRead);
+    void update();
     void draw(int x, int y);
      
 //    void sendPacketToSpark(ofToSparkyPacket o2s);
-    void readPacketFromSpark(char * udpMessage);
+//    void readPacketFromSpark(char * udpMessage);
+    void readPacketFromSpark(sparkyToOFPacket s2oread);
     
     int millisRunning;
     float lastContactTime;
@@ -43,6 +45,7 @@ public:
     ofxUDPManager udp;
     string ip;
     sparkyToOFPacket s2o;
+    ofToSparkyPacket o2s;
     
     timer t;
     float heartRate;

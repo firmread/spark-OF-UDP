@@ -8,7 +8,7 @@
 
 #include "packetHandler.h"
 
-void packetHandler::parse(ofToSparkyPacket o2s){
+packetHandler::packetHandler(ofToSparkyPacket o2s){
     bIsO2S = true;
     
     packetType = o2s.packetType;
@@ -23,7 +23,7 @@ void packetHandler::parse(ofToSparkyPacket o2s){
 }
 
 
-void packetHandler::parse(sparkyToOFPacket s2o){
+packetHandler::packetHandler(sparkyToOFPacket s2o){
     bIsO2S = false;
     //-1 = spark to of
     packetType = -1;
@@ -40,7 +40,7 @@ void packetHandler::parse(sparkyToOFPacket s2o){
     ip[2] = s2o.ipSpark >> 8 & 0xFF;
     ip[3] = s2o.ipSpark & 0xFF;
     
-    string ipSparkString = ofToString(ip[0]) + "." + ofToString(ip[1]) + "."
+    ipSparkString = ofToString(ip[0]) + "." + ofToString(ip[1]) + "."
     + ofToString(ip[2]) + "." + ofToString(ip[3]);
     
     ipSparkInt = s2o.ipSpark;

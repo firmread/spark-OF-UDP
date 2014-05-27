@@ -8,13 +8,14 @@ void ofApp::setup(){
 	udp.Create();
 	udp.Bind(7777);
     udp.SetNonBlocking(true);
-    
+    heart.setup(500);
 }
 
 
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
     
     
 	char udpMessage[sizeof(sparkyToOFPacket)];
@@ -31,9 +32,7 @@ void ofApp::update(){
         memcpy(&S2Opacket, udpMessage, sizeof(sparkyToOFPacket));
         
         
-        packetHandler ph;
-        ph.parse(S2Opacket);
-//        
+        packetHandler ph(S2Opacket);
 //        //time
 //        cout << S2Opacket.millisRunning << endl;
 //        
@@ -54,7 +53,7 @@ void ofApp::update(){
         bool bDoesThisSparkExist = false;
         for (int i = 0; i < sparks.size(); i++){
             if (sparks[i].ip == ph.ipSparkString){
-                cout << "ph.ipSparkString" << i << ph.ipSparkString << endl;
+                cout << "ph.ipSparkString" << i << sparks[i].ip << endl;
                 bDoesThisSparkExist = true;
             }
         }
@@ -62,21 +61,18 @@ void ofApp::update(){
         // register it if we never seen it before
         if (!bDoesThisSparkExist){
             spark temp;
-            temp.setup(S2Opacket);
-            cout << "create the first object " << ph.ipSparkString << endl;
+            //temp.setup(S2Opacket);
+            cout << "create object for " << ph.ipSparkString << endl;
             
             sparks.push_back(temp);
+            sparks[sparks.size()-1].setup(S2Opacket);
             
         // otherwise, welcome back our beloved sparky!  !
         } else {
             
             for (int i = 0; i< sparks.size(); i++) {
                 if(sparks[i].ip == ph.ipSparkString){
-                    sparks[i].readPacketFromSpark(udpMessage);
-                    /*sparks[i].millisAlive = S2Opacket.millisRunning;
-                    sparks[i].nPacketsReceived++;
-                    sparks[i].getPacketBackTime = ofGetElapsedTimef();
-                    sparks[i].deltaTimeRoundTrip = sparks[i].getPacketBackTime - sparks[i].sendPacketOutTime;*/
+                    sparks[i].readPacketFromSpark(S2Opacket);
                 }
             }
         }
@@ -85,8 +81,12 @@ void ofApp::update(){
         
         bGotSth = false;
     }
-
     
+    for (int i =0; i< sparks.size(); i++){
+        sparks[i].update();
+//        cout << "updating" << i << endl;
+    }
+
 }
 
 //--------------------------------------------------------------
