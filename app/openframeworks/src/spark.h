@@ -50,6 +50,8 @@ public:
     timer t;
     float heartRate;
     
+    bool bUdpConnected;
+    
 };
 
 

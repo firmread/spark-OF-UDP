@@ -11,7 +11,7 @@
 spark::spark(){
     transferTime = -1;
     nPacketsReceived = 0;
-    heartRate = 500;
+    heartRate = 2000;
     t.setup(heartRate);
     fadingBeep = 0;
     
@@ -19,13 +19,15 @@ spark::spark(){
 
 void spark::setup(sparkyToOFPacket s2oInit){
     
+    
+    bUdpConnected = false;
     packetHandler ph(s2oInit);
 //    ph.parse(s2oInit);
     
-    udp.Create();
-    udp.Connect(ph.ipSparkString.c_str(), 8888);
+    //udp.Create();
+    //bUdpConnected = udp.Connect(ph.ipSparkString.c_str(), 8888);
     
-    udp.SetNonBlocking(true);
+    //udp.SetNonBlocking(true);
     ip = ph.ipSparkString;
     cout << ph.ipSparkString << endl;
     cout << "my ip is " << ip << endl;
@@ -37,6 +39,16 @@ void spark::setup(sparkyToOFPacket s2oInit){
 
 
 void spark::update(){
+    
+    
+    //cout << ip << " " << bUdpConnected << endl;
+//    if (!bUdpConnected){
+//        cout << "trying again to connect ??? " << endl;
+//        bUdpConnected = udp.Connect(ip.c_str(), 8888);
+//        return;
+//        
+//    }
+    
     //beat
     
     t.setTimer(heartRate);
@@ -51,7 +63,20 @@ void spark::update(){
         char packetBytes[sizeof(ofToSparkyPacket)];
         memcpy(packetBytes, &o2s, sizeof(ofToSparkyPacket));
 
-        udp.Send(packetBytes,sizeof(ofToSparkyPacket));
+        //int sent = udp.Send(packetBytes,sizeof(ofToSparkyPacket));
+        //cout << ip << " " << sent << endl;
+        
+        udp.Create();
+        udp.Connect(ip.c_str(), 8888);
+        int sent =  udp.Send(packetBytes, sizeof(ofToSparkyPacket));
+        //cout << sent << " " << ip << endl;
+        udp.Close();
+        
+        //if (sent == -1){
+         //   udp.Close();
+         //   udp.Create();
+         //   bUdpConnected = udp.Connect(ip.c_str(), 8888);
+       // }
 
     }
     
