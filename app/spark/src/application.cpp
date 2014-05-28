@@ -1,6 +1,6 @@
 #include "application.h"
 #include "spark_disable_cloud.h"
-
+#include "pwm.h"
 #include "communicationDefines.h"
 #include "communicationTypes.h"
 
@@ -148,6 +148,13 @@ void handlePacket( byte * data){
     } else if (O2Spacket.packetType == PACKET_TYPE_COLOR){
         
         // don't respond, right?
+        
+        uint8_t r = O2Spacket.r;
+        uint8_t g = O2Spacket.g;
+        uint8_t b = O2Spacket.b;
+        
+        pwm( r, g, b );
+        
         
         
     }
