@@ -23,9 +23,9 @@ void pwmSetup(){
 
 
 void pwm( uint8_t r, uint8_t g, uint8_t b){
-    pwmSend(A4, r);
-    pwmSend(A5, g);
-    pwmSend(A6, b);
+    pwmSend(A5, r);
+    pwmSend(A6, g);
+    pwmSend(A7, b);
 }
 
 

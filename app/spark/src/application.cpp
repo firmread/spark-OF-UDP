@@ -28,19 +28,30 @@ void handlePacket( byte * data);
 void loopOnline();
 void loopOffline();
 
+int r, g, b;
+
+
 
 //--------------------------------------------------------------
 void setup(){
     // we do very little network related or print out here, since this runs even before we are actually online
     pinMode(led, OUTPUT);
     Serial.begin(9600);
+    pwmSetup();
     
+    r = 50;
+    g = 50;
+    b = 50;
+    
+    delay(5);
 }
 
 //--------------------------------------------------------------
 void loop(){
 
     //----------------------- are we online for real?
+    
+    pwm (r,g,b);
     
     bool bOnlinePrev = bOnline;
     
@@ -149,12 +160,10 @@ void handlePacket( byte * data){
         
         // don't respond, right?
         
-        uint8_t r = O2Spacket.r;
-        uint8_t g = O2Spacket.g;
-        uint8_t b = O2Spacket.b;
-        
-        pwm( r, g, b );
-        
+         r = O2Spacket.r;
+         g = O2Spacket.g;
+         b = O2Spacket.b;
+       
         
         
     }
