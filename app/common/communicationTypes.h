@@ -2,7 +2,7 @@
 #pragma once
 
 typedef struct {
-    unsigned char packetType;       // 0 = discovery 1=heartbear  2=
+    unsigned char packetType;       // 0 = discovery 1=heartbeat  2=color
     float ofPacketSentOutTime;
     int ofIp;
     unsigned char r;
