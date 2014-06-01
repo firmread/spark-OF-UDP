@@ -138,7 +138,7 @@ void ofApp::fireDiscovery(){
     
     for (int i = 0; i < 256; i++){
         
-        string IP = "192.168.2." + ofToString(i);
+        string IP = "192.168.1." + ofToString(i);
         
         bool bFoundAlready = false;
         for (int j = 0; j < sparks.size(); j++){

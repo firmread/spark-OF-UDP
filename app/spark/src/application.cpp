@@ -63,6 +63,14 @@ void loop(){
         bOnline = true;
     }
     
+    Serial.println(".");
+    Serial.println(addr[0]);
+    Serial.println(addr[1]);
+    Serial.println(addr[2]);
+    Serial.println(addr[3]);
+    
+    
+    
     if (bOnline == true && bOnlinePrev == false){
         Udp.begin(localPort);
     } else if (bOnline == false && bOnlinePrev == true){
@@ -118,10 +126,11 @@ void handlePacket( byte * data){
 
     // handle O->S packet
     
+    // clear memory, copy bytes into struct...
     memset(&O2Spacket, 0, INCOMING_PACKET_SIZE);
     memcpy(&O2Spacket, data, INCOMING_PACKET_SIZE);
 
-
+    // parse out return IP address
     // O2Spacket.serverIp[]
     IPAddress serverIp;
     serverIp[0] = O2Spacket.ofIp >> 24 & 0xFF;
@@ -135,11 +144,15 @@ void handlePacket( byte * data){
     Serial.println(serverIp[2]);
     Serial.println(serverIp[3]);
     
+    // if it's a discovery or heartbeat packet, return something
     if (O2Spacket.packetType == PACKET_TYPE_DISCOVERY || O2Spacket.packetType == PACKET_TYPE_HEARTBEAT){
         
         // send packet back
+        // how long have we been running
         S2Opacket.millisRunning = millis();
+        // return the OF time from this packet
         S2Opacket.ofPacketSentOutTime = O2Spacket.ofPacketSentOutTime;
+        // grab our own IP address and put it in the packet
         IPAddress addr = Network.localIP();
         unsigned char a = addr[0];
         unsigned char b = addr[1];
@@ -147,8 +160,11 @@ void handlePacket( byte * data){
         unsigned char d = addr[3];
         int addressAsInt = a << 24 | b << 16 | c << 8 | d;
         S2Opacket.ipSpark = addressAsInt;
+        // gray our ID (uuid)
         String uuidTemp = Spark.deviceID();
+        // memcpy packet into byte array:
         memcpy(S2Opacket.uuid,uuidTemp.c_str(),uuidTemp.length());
+        // send packet
         Udp.beginPacket(serverIp, outgoingPort);
         memcpy(packetBufferOutgoing, &S2Opacket, OUTGOING_PACKET_SIZE);
         Udp.write(packetBufferOutgoing, OUTGOING_PACKET_SIZE);
