@@ -47,4 +47,10 @@ public:
     string convertIpToString(int ip);
     void fireDiscovery();
     void fireControl();
+    
+    
+    void loadUUIDList();
+    map < string, int > uuidMapping;
+    
+    
 };

@@ -11,7 +11,7 @@
 spark::spark(){
     transferTime = -1;
     nPacketsReceived = 0;
-    heartRate = 2000;
+    heartRate = 1500;
     t.setup(heartRate);
     fadingBeep = 0;
     
@@ -103,7 +103,8 @@ void spark::draw(int x, int y){
                         "\nip      :" + ofToString(ip) +
                         "\nmsAlive :" + ofToString(millisRunning) +
                         "\npkg recv:" + ofToString(nPacketsReceived) +
-                        "\ntransfT :" + ofToString(transferTime), 0,0);
+                        "\ntransfT :" + ofToString(transferTime) +
+                        "\nbordNum :" + ofToString(boardNumber), 0,0);
     
     ofPopMatrix();
     

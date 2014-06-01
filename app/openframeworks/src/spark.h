@@ -42,6 +42,7 @@ public:
     float fadingBeep;
     
     string uuid;
+    int boardNumber;
     ofxUDPManager udp;
     string ip;
     sparkyToOFPacket s2o;

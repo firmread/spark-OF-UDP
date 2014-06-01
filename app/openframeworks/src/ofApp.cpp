@@ -2,6 +2,30 @@
 
 
 //--------------------------------------------------------------
+bool sortSpark(const spark &a, const spark &b) {
+    return a.boardNumber < b.boardNumber;
+}
+
+void ofApp::loadUUIDList(){
+    
+    ofBuffer buffer = ofBufferFromFile("uuidList.txt");
+    
+    string line;
+    
+    while (true){
+        line = buffer.getNextLine();
+        //cout << line << endl;
+        vector < string > str = ofSplitString(line, " ");
+        cout << str[1] << endl;
+        uuidMapping[str[1]] = ofToInt(str[0]);
+        if (buffer.isLastLine()) break;
+    }
+    
+    
+}
+
+
+//--------------------------------------------------------------
 void ofApp::setup(){
     ofSetCircleResolution(100);
     
@@ -9,6 +33,8 @@ void ofApp::setup(){
 	udp.Bind(7777);
     udp.SetNonBlocking(true);
     //heart.setup(500);
+    
+    loadUUIDList();
 }
 
 
@@ -61,6 +87,8 @@ void ofApp::update(){
                 
                 sparks.push_back(temp);
                 sparks[sparks.size()-1].setup(S2Opacket);
+                sparks[sparks.size()-1].boardNumber = uuidMapping[sparks[sparks.size()-1].uuid];
+                ofSort(sparks, sortSpark);
                 
             // otherwise, welcome back our beloved sparky!  !
             } else {
@@ -79,6 +107,13 @@ void ofApp::update(){
         sparks[i].update();
 //        cout << "updating" << i << endl;
     }
+    
+//    if (ofGetMousePressed()){
+//    
+//        if (ofGetFrameNum() % 60 ==0){
+//            fireControl();
+//        }
+//    }
 
 }
 
@@ -103,7 +138,7 @@ void ofApp::keyPressed(int key){
     }
     
     if (key == 'c'){
-        fireControl();
+        //fireControl();
         
     }
 }
@@ -125,7 +160,7 @@ void ofApp::fireDiscovery(){
     
     for (int i = 0; i < 256; i++){
         
-        string IP = "192.168.1." + ofToString(i);
+        string IP = "192.168.10." + ofToString(i);
         
         bool bFoundAlready = false;
         for (int j = 0; j < sparks.size(); j++){
@@ -155,21 +190,44 @@ void ofApp::fireControl(){
     O2Spacket.ofPacketSentOutTime = ofGetElapsedTimef();
     getOfLocalIp readIp;
     O2Spacket.ofIp = readIp.getInt();
-    O2Spacket.r =  sin(ofGetElapsedTimef()) *50 + 50;
-    O2Spacket.g =  sin(ofGetElapsedTimef() + PI/3) * 50 + 50;
-    O2Spacket.b =  sin(ofGetElapsedTimef() + 2*PI/3) * 50 + 50;
+   
     
     char packetBytes[sizeof(ofToSparkyPacket)];
-    memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));
     
     for (int i=0; i<sparks.size(); i++) {
         
         
+        float bri =  sin( (i / (float)sparks.size()) * TWO_PI + ofGetElapsedTimef()) * 0.5 + 0.5;
+        
+        
+//        if ((int)ofGetElapsedTimef() % 6 == i){
+//            O2Spacket.r =  sin(ofGetElapsedTimef()) *50 + 50;
+//            O2Spacket.g =  sin(ofGetElapsedTimef() + PI/3) * 50 + 50;
+//            O2Spacket.b =  sin(ofGetElapsedTimef() + 2*PI/3) * 50 + 50;
+//        } else {
+//            O2Spacket.r = 0;
+//            O2Spacket.g = 0;
+//            O2Spacket.b = 0;
+//        }
+        
+        
+        bri = powf(bri, 10);
+        
+        O2Spacket.r = bri*255;
+        O2Spacket.g = bri*255;
+        O2Spacket.b = bri*0;
+        
+        
+        memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));
+        
+        
+        //if (mouseX % 6 == i){
         sparks[i].udp.Create();
         sparks[i].udp.Connect(sparks[i].ip.c_str(), 8888);
         int sent = sparks[i].udp.Send(packetBytes, sizeof(ofToSparkyPacket));
         cout << sent << " " << sparks[i].ip << endl;
         sparks[i].udp.Close();
+        
 
         
         

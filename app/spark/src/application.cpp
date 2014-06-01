@@ -7,7 +7,9 @@
 
 unsigned int localPort      = SPARKY_INCOMING_PORT;
 unsigned int outgoingPort   = SPARKY_OUTGOING_PORT;
-int led                     = D0;
+int led                     = D7;
+
+// //
 
 const int INCOMING_PACKET_SIZE = sizeof(ofToSparkyPacket);
 const int OUTGOING_PACKET_SIZE = sizeof(sparkyToOFPacket);
@@ -106,6 +108,9 @@ void loopOnline(){
             Udp.read(packetBufferIncoming,nbytes);
             handlePacket(packetBufferIncoming);
             
+//            digitalWrite(D7,HIGH);
+//            delay(20);
+//            digitalWrite(D7,LOW);
         }
     }
 }
@@ -144,6 +149,10 @@ void handlePacket( byte * data){
     Serial.println(serverIp[2]);
     Serial.println(serverIp[3]);
     
+    
+    
+    
+    
     // if it's a discovery or heartbeat packet, return something
     if (O2Spacket.packetType == PACKET_TYPE_DISCOVERY || O2Spacket.packetType == PACKET_TYPE_HEARTBEAT){
         
@@ -170,7 +179,7 @@ void handlePacket( byte * data){
         Udp.write(packetBufferOutgoing, OUTGOING_PACKET_SIZE);
         Udp.endPacket();
 
-
+      
         
     } else if (O2Spacket.packetType == PACKET_TYPE_COLOR){
         
