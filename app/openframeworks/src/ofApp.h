@@ -46,4 +46,5 @@ public:
 //    int getOfIpInt();
     string convertIpToString(int ip);
     void fireDiscovery();
+    void fireControl();
 };
