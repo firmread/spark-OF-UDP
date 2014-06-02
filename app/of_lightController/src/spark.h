@@ -38,7 +38,7 @@ public:
     
     float transferTime;
     
-    bool bGotPacket;
+    bool bGotPacket;  
     float fadingBeep;
     
     string uuid;

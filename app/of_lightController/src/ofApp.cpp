@@ -7,21 +7,14 @@ bool sortSpark(const spark &a, const spark &b) {
 }
 
 void ofApp::loadUUIDList(){
-    
     ofBuffer buffer = ofBufferFromFile("uuidList.txt");
-    
     string line;
-    
     while (true){
         line = buffer.getNextLine();
-        //cout << line << endl;
         vector < string > str = ofSplitString(line, " ");
-        cout << str[1] << endl;
         uuidMapping[str[1]] = ofToInt(str[0]);
         if (buffer.isLastLine()) break;
     }
-    
-    
 }
 
 
@@ -29,12 +22,41 @@ void ofApp::loadUUIDList(){
 void ofApp::setup(){
     ofSetCircleResolution(100);
     
+    
+    getOfLocalIp readIp;
+    myIPaddressInt = readIp.getInt();
+    myIPaddressString = readIp.getString();
+    vector < string > ipSplit = ofSplitString(myIPaddressString, ".");
+    myIPadressJustFirstThree = "";
+    for (int i = 0; i < 3; i++){
+        myIPadressJustFirstThree += ipSplit[i] + ".";
+    }
+    
+    
+    
 	udp.Create();
 	udp.Bind(7777);
     udp.SetNonBlocking(true);
     //heart.setup(500);
     
     loadUUIDList();
+    
+    gui.setup();
+    gui.add(useOsc.setup("use OSC", true));
+    gui.add(sendColor.setup("send color data to lights", true));
+    gui.add(flipRgb.setup("flip rgb to bgr on send", true));
+    gui.add(setAllWhite.setup("set all white", false));
+    gui.add(setAllBlack.setup("set all black", false));
+    gui.add(setAllRandom.setup("set all random", false));
+
+    gui.setPosition(500,70);
+    
+    receiver.setup(PORT);
+    
+    
+    
+    colorValuesForOutput.assign(50, ofColor(ofColor::gray));
+    
 }
 
 
@@ -43,9 +65,63 @@ void ofApp::setup(){
 void ofApp::update(){
     
     
-    if (ofGetMousePressed()){
-        fireControl();
+    if (setAllWhite == true){
+        setAllWhite = false;
+        for (int i = 0; i < colorValuesForOutput.size(); i++){
+            colorValuesForOutput[i] = ofColor::white;
+        }
+        //useOsc = false;
+    }
+    if (setAllBlack == true){
+        setAllBlack = false;
         
+        for (int i = 0; i < colorValuesForOutput.size(); i++){
+            colorValuesForOutput[i] = ofColor::black;
+        }
+        //useOsc = false;
+    }
+    
+    if (setAllRandom == true){
+        setAllRandom = false;
+        
+        for (int i = 0; i < colorValuesForOutput.size(); i++){
+            colorValuesForOutput[i] = ofColor(ofRandom(0,255), ofRandom(0,255), ofRandom(0,255));;
+        }
+        //useOsc = false;
+    }
+    
+    
+    // OSC
+    while(receiver.hasWaitingMessages()){
+		ofxOscMessage m;
+		receiver.getNextMessage(&m);
+        if(m.getAddress() == "/color"){
+            
+    //              :(  this is bad
+    //            for (int i = 0; i < m.getNumArgs()/3; i++){
+    //                colorValuesForOutput[i].set( m.getArgAsInt32(i*3+0), m.getArgAsInt32(i*3+1), m.getArgAsInt32(i*3+2));
+    //            }
+            
+            for (int i = 0; i < m.getNumArgs(); i++){
+                int value = m.getArgAsInt32(i);
+                int red = value >> 24 & 0xFF; //hex FF = white (255) 1111 1111
+                int green = value >> 16 & 0xFF;
+                int blue = value >> 8 & 0xFF;
+                colorValuesForOutput[i].set(red, green, blue);
+                
+            }
+            
+            
+            
+            
+            
+        }
+    }
+    
+    
+    
+    if (sendColor){
+        sendColorData();
     }
     
 	char udpMessage[sizeof(sparkyToOFPacket)];
@@ -127,6 +203,35 @@ void ofApp::draw(){
     for (int i =0; i< sparks.size(); i++){
         sparks[i].draw(100, 100+100*i);
     }
+    
+    
+    ofDrawBitmapStringHighlight("conneting light control\n" + myIPaddressString, 500, 20);
+    
+    gui.draw();
+    
+    
+    float width = ofGetWidth() / (float)colorValuesForOutput.size();
+    for (int i = 0; i < colorValuesForOutput.size(); i++){
+        
+        
+        ofSetColor(colorValuesForOutput[i]);
+        ofFill();
+        ofRect(i*width, ofGetHeight(), width-1, -30);
+        
+        if (colorValuesForOutput[i].getBrightness() < 10){
+            // white outline
+            ofSetColor(ofColor::white);
+            ofNoFill();
+            ofRect(i*width, ofGetHeight(), width-1, -30);
+        } else {
+            // black outline
+            ofSetColor(ofColor::black);
+            ofNoFill();
+            ofRect(i*width, ofGetHeight(), width-1, -30);
+        }
+        
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -141,18 +246,20 @@ void ofApp::keyPressed(int key){
         //fireControl();
         
     }
+    
+    
 }
 
 //--------------------------------------------------------------
 void ofApp::fireDiscovery(){
     
-    // let's do discovery:
+    // TODO:  MULTICAST ???
+    
     
     memset(&O2Spacket, 0, sizeof(ofToSparkyPacket));
     O2Spacket.packetType = PACKET_TYPE_DISCOVERY;
     O2Spacket.ofPacketSentOutTime = ofGetElapsedTimef();
-    getOfLocalIp readIp;
-    O2Spacket.ofIp = readIp.getInt();
+    O2Spacket.ofIp = myIPaddressInt;
     char packetBytes[sizeof(ofToSparkyPacket)];
     memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));
     
@@ -160,7 +267,7 @@ void ofApp::fireDiscovery(){
     
     for (int i = 0; i < 256; i++){
         
-        string IP = "192.168.10." + ofToString(i);
+        string IP = myIPadressJustFirstThree + ofToString(i);
         
         bool bFoundAlready = false;
         for (int j = 0; j < sparks.size(); j++){
@@ -181,57 +288,40 @@ void ofApp::fireDiscovery(){
 
 }
 //--------------------------------------------------------------
-void ofApp::fireControl(){
+void ofApp::sendColorData(){
     
-    // let's do discovery:
     
     memset(&O2Spacket, 0, sizeof(ofToSparkyPacket));
     O2Spacket.packetType = PACKET_TYPE_COLOR;
     O2Spacket.ofPacketSentOutTime = ofGetElapsedTimef();
-    getOfLocalIp readIp;
-    O2Spacket.ofIp = readIp.getInt();
-   
-    
+
+    O2Spacket.ofIp = myIPaddressInt;
     char packetBytes[sizeof(ofToSparkyPacket)];
     
     for (int i=0; i<sparks.size(); i++) {
         
+        int number = sparks[i].boardNumber;
+        ofColor colorToSend = colorValuesForOutput[number];
         
-        float bri =  sin( (i / (float)sparks.size()) * TWO_PI + ofGetElapsedTimef()) * 0.5 + 0.5;
-        
-        
-//        if ((int)ofGetElapsedTimef() % 6 == i){
-//            O2Spacket.r =  sin(ofGetElapsedTimef()) *50 + 50;
-//            O2Spacket.g =  sin(ofGetElapsedTimef() + PI/3) * 50 + 50;
-//            O2Spacket.b =  sin(ofGetElapsedTimef() + 2*PI/3) * 50 + 50;
-//        } else {
-//            O2Spacket.r = 0;
-//            O2Spacket.g = 0;
-//            O2Spacket.b = 0;
-//        }
-        
-        
-        bri = powf(bri, 10);
-        
-        O2Spacket.r = bri*255;
-        O2Spacket.g = bri*255;
-        O2Spacket.b = bri*0;
-        
+
+        if (flipRgb){
+            O2Spacket.r = colorToSend.b;
+            O2Spacket.g = colorToSend.g;
+            O2Spacket.b = colorToSend.r;
+        } else {
+            O2Spacket.r = colorToSend.r;
+            O2Spacket.g = colorToSend.g;
+            O2Spacket.b = colorToSend.b;
+        }
         
         memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));
         
-        
-        //if (mouseX % 6 == i){
+    
         sparks[i].udp.Create();
         sparks[i].udp.Connect(sparks[i].ip.c_str(), 8888);
         int sent = sparks[i].udp.Send(packetBytes, sizeof(ofToSparkyPacket));
-        cout << sent << " " << sparks[i].ip << endl;
         sparks[i].udp.Close();
         
-
-        
-        
-        //sparks[i].udp.Send(packetBytes, sizeof(ofToSparkyPacket));
     }
     
 }
@@ -268,7 +358,7 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-    //fireControl();
+
 }
 
 //--------------------------------------------------------------

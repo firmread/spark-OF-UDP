@@ -8,7 +8,11 @@
 #include "packetHandler.h"
 #include "../../common/communicationDefines.h"
 #include "../../common/communicationTypes.h"
+#include "ofxGui.h"
+#include "ofxOsc.h"
 
+// OSC
+#define PORT 12345
 
 class ofApp : public ofBaseApp{
 
@@ -39,18 +43,36 @@ public:
     //heartbeat
     sparkyToOFPacket S2Opacket;
 
-    
-    timer heart;
 
+    timer heart;
     int delay;
-//    int getOfIpInt();
     string convertIpToString(int ip);
     void fireDiscovery();
-    void fireControl();
+    void sendColorData();
     
-    
+    // UUID
     void loadUUIDList();
     map < string, int > uuidMapping;
     
+    // gui:
     
+    ofxToggle   useOsc;
+    ofxToggle   sendColor;
+    ofxToggle   flipRgb;
+    ofxToggle   setAllWhite;
+    ofxToggle   setAllBlack;
+    ofxToggle   setAllRandom;
+	ofxPanel    gui;
+    
+    // OSC
+    ofxOscReceiver receiver;
+    
+    // colors we are sending out.
+    vector < ofColor > colorValuesForOutput;
+    
+    string myIPaddressString;
+    int myIPaddressInt;
+    string myIPadressJustFirstThree;        // 192.168.10.
+    
+
 };
