@@ -95,6 +95,7 @@ void spark::draw(int x, int y){
     }
     if (fadingBeep < 255) fadingBeep +=5;
     
+    ofFill();
     ofSetColor(255, fadingBeep, fadingBeep, 220);
     ofCircle(-15, -15, 10);
     

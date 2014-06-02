@@ -23,6 +23,8 @@ class ofApp : public ofBaseApp{
     
     
         colorSender sender;
+        ofImage img;
     
+        float pos;
     
 };

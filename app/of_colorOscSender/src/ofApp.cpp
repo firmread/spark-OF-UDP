@@ -7,28 +7,32 @@
 void ofApp::setup(){
 
     sender.setup();
+
+    img.loadImage("band.png");
+    pos = -img.getWidth();
 }
+
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
     sender.send();
     
+    pos += 1.0;
+    if (pos > 120){
+        pos = -img.getWidth();
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-    ofClear(255,255,255);
+    ofClear(0,0,0);
     ofFill();
-    ofSetColor(255,0,0);
-    ofRect(mouseX,0,500,500);
-    
+    ofSetColor(255,255,255);
+    img.draw(pos, 0); //(mouseX,0,500,500);
     ofDisableAlphaBlending();
     sender.grabScreen();
-    
-
-    
     sender.drawSentColors();
 
 }
