@@ -1,8 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxXmlSettings.h"
-#include "ofxOsc.h"
+#include "colorSender.h"
 
 
 class ofApp : public ofBaseApp{
@@ -23,14 +22,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     
-        string ipAddress;
-        int port;
+        colorSender sender;
     
-        void readXMLdata();
-    
-        ofxOscSender sender;
-        vector < ofColor > colors;
-    
-        ofImage centerOfScreen;
     
 };
