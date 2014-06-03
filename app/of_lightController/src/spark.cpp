@@ -53,32 +53,32 @@ void spark::update(){
     
     t.setTimer(heartRate);
     t.update(ofGetElapsedTimeMillis());
-    if(t.bTimerFired()){
-        memset(&o2s, 0, sizeof(ofToSparkyPacket));
-        o2s.packetType = PACKET_TYPE_HEARTBEAT;
-        o2s.ofPacketSentOutTime = ofGetElapsedTimef();
-        getOfLocalIp readIp;
-        o2s.ofIp = readIp.getInt();
-        
-        char packetBytes[sizeof(ofToSparkyPacket)];
-        memcpy(packetBytes, &o2s, sizeof(ofToSparkyPacket));
-
-        //int sent = udp.Send(packetBytes,sizeof(ofToSparkyPacket));
-        //cout << ip << " " << sent << endl;
-        
-        udp.Create();
-        udp.Connect(ip.c_str(), 8888);
-        int sent =  udp.Send(packetBytes, sizeof(ofToSparkyPacket));
-        //cout << sent << " " << ip << endl;
-        udp.Close();
-        
-        //if (sent == -1){
-         //   udp.Close();
-         //   udp.Create();
-         //   bUdpConnected = udp.Connect(ip.c_str(), 8888);
-       // }
-
-    }
+//    if(t.bTimerFired()){
+//        memset(&o2s, 0, sizeof(ofToSparkyPacket));
+//        o2s.packetType = PACKET_TYPE_HEARTBEAT;
+//        o2s.ofPacketSentOutTime = ofGetElapsedTimef();
+//        getOfLocalIp readIp;
+//        o2s.ofIp = readIp.getInt();
+//        
+//        char packetBytes[sizeof(ofToSparkyPacket)];
+//        memcpy(packetBytes, &o2s, sizeof(ofToSparkyPacket));
+//
+//        //int sent = udp.Send(packetBytes,sizeof(ofToSparkyPacket));
+//        //cout << ip << " " << sent << endl;
+//        
+//        udp.Create();
+//        udp.Connect(ip.c_str(), 8888);
+//        int sent =  udp.Send(packetBytes, sizeof(ofToSparkyPacket));
+//        //cout << sent << " " << ip << endl;
+//        udp.Close();
+//        
+//        //if (sent == -1){
+//         //   udp.Close();
+//         //   udp.Create();
+//         //   bUdpConnected = udp.Connect(ip.c_str(), 8888);
+//       // }
+//
+//    }
     
     // add timer
     // do heartbeat

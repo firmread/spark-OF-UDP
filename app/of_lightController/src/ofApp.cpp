@@ -65,6 +65,11 @@ void ofApp::setup(){
 void ofApp::update(){
     
     
+    if (ofGetFrameNum() % 2 == 0){
+        fireDiscovery();
+    }
+    
+    
     if (setAllWhite == true){
         setAllWhite = false;
         for (int i = 0; i < colorValuesForOutput.size(); i++){
@@ -238,9 +243,9 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     
     
-    if (key == ' '){
-        fireDiscovery();
-    }
+//    if (key == ' '){
+//        fireDiscovery();
+//    }
     
     if (key == 'c'){
         //fireControl();
@@ -258,32 +263,40 @@ void ofApp::fireDiscovery(){
     
     memset(&O2Spacket, 0, sizeof(ofToSparkyPacket));
     O2Spacket.packetType = PACKET_TYPE_DISCOVERY;
-    O2Spacket.ofPacketSentOutTime = ofGetElapsedTimef();
+    
     O2Spacket.ofIp = myIPaddressInt;
     char packetBytes[sizeof(ofToSparkyPacket)];
+    O2Spacket.ofPacketSentOutTime = ofGetElapsedTimef();
     memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));
     
     ofxUDPManager udp4discovery;
+    udp4discovery.Create();
+    udp4discovery.SetEnableBroadcast(true);
+    udp4discovery.Connect("192.168.10.255", 8888);
+    udp4discovery.Send(packetBytes,sizeof(ofToSparkyPacket));
+    udp4discovery.Close();
     
-    for (int i = 0; i < 256; i++){
-        
-        string IP = myIPadressJustFirstThree + ofToString(i);
-        
-        bool bFoundAlready = false;
-        for (int j = 0; j < sparks.size(); j++){
-            if (sparks[j].ip == IP){
-                bFoundAlready = true;
-            }
-        }
-        
-        if (!bFoundAlready){
-            udp4discovery.Create();
-            udp4discovery.Connect(IP.c_str(),8888);
-            udp4discovery.SetNonBlocking(false);
-            udp4discovery.Send(packetBytes,sizeof(ofToSparkyPacket));
-            //ofSleepMillis(30);
-        }
-    }
+    
+    
+//    for (int i = 0; i < 256; i++){
+//        
+//        string IP = myIPadressJustFirstThree + ofToString(i);
+//        
+//        bool bFoundAlready = false;
+//        for (int j = 0; j < sparks.size(); j++){
+//            if (sparks[j].ip == IP){
+//                bFoundAlready = true;
+//            }
+//        }
+//        
+//        if (!bFoundAlready){
+//            udp4discovery.Create();
+//            udp4discovery.Connect(IP.c_str(),8888);
+//            udp4discovery.SetNonBlocking(false);
+//            udp4discovery.Send(packetBytes,sizeof(ofToSparkyPacket));
+//            //ofSleepMillis(30);
+//        }
+//    }
     
 
 }
