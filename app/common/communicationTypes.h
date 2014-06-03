@@ -8,6 +8,7 @@ typedef struct {
     unsigned char r;
     unsigned char g;
     unsigned char b;
+    int packetCount;                // each packet will be sent in order.  maybe we can drop packets that are old, etc.
 } ofToSparkyPacket;
 
 
@@ -17,6 +18,9 @@ typedef struct {
     unsigned long millisRunning;
     float ofPacketSentOutTime;
     int ipSpark;
+    float sparkDataFrameRate;               // how many packets per second are we getting
+    float missedPacketPerSecond;                  // how many times did we get a packet that was not numerically synchronized.
+    float outOfOrderPerSecond;              // how many packets came in a wrong order?
     unsigned char uuid[24];
     
 } sparkyToOFPacket;

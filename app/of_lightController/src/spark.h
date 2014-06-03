@@ -24,13 +24,18 @@ public:
 //    void setup();
     spark();
     
-    void setup(sparkyToOFPacket s2oInit);
+    bool bSendHeartBeat;
+    int sparkSentCount;
+    
+    
+    void setup(sparkyToOFPacket & s2oInit);
     void update();
     void draw(int x, int y);
+    void drawSmall(int x, int y);
      
 //    void sendPacketToSpark(ofToSparkyPacket o2s);
 //    void readPacketFromSpark(char * udpMessage);
-    void readPacketFromSpark(sparkyToOFPacket s2oread);
+    void readPacketFromSpark(sparkyToOFPacket & s2oread, float readTime);
     
     int millisRunning;
     float lastContactTime;

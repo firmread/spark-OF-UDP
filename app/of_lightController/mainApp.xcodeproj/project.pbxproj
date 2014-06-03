@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		125506CD3E5F428AAFE5CC65 /* ofxTCPManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F399B91E98DC31CDA6DDACB4 /* ofxTCPManager.cpp */; };
-		47D0241D1934FC41009AE08D /* packetHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 47D0241B1934FC41009AE08D /* packetHandler.cpp */; };
 		47F18B9F1933C6680008A0EE /* spark.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 47F18B9D1933C6680008A0EE /* spark.cpp */; };
 		66CA411C5A9664E27326BF36 /* ofxTCPServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C085E327DAB912CFA2A443D /* ofxTCPServer.cpp */; };
 		922A3BB1193C6E6200DAA556 /* ofxBaseGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 922A3BA0193C6E6200DAA556 /* ofxBaseGui.cpp */; };
@@ -91,11 +90,10 @@
 		2F519EB3B0DCD7378FB86ABE /* ofxUDPManager.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxUDPManager.h; path = ../../../addons/ofxNetwork/src/ofxUDPManager.h; sourceTree = SOURCE_ROOT; };
 		30841703B7AC8487D16FB4AA /* ofxTCPServer.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxTCPServer.h; path = ../../../addons/ofxNetwork/src/ofxTCPServer.h; sourceTree = SOURCE_ROOT; };
 		35BB9BB90DBABFD3B39F8DB6 /* ofxUDPManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUDPManager.cpp; path = ../../../addons/ofxNetwork/src/ofxUDPManager.cpp; sourceTree = SOURCE_ROOT; };
-		47D0241B1934FC41009AE08D /* packetHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = packetHandler.cpp; sourceTree = "<group>"; };
-		47D0241C1934FC41009AE08D /* packetHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetHandler.h; sourceTree = "<group>"; };
 		47D0241E1934FDA1009AE08D /* getOfLocalIp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = getOfLocalIp.h; sourceTree = "<group>"; };
 		47F18B9D1933C6680008A0EE /* spark.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = spark.cpp; sourceTree = "<group>"; };
 		47F18B9E1933C6680008A0EE /* spark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spark.h; sourceTree = "<group>"; };
+		9218036F193DCDD500513433 /* sparkPacketUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = sparkPacketUtils.h; path = ../sparkPacketUtils.h; sourceTree = "<group>"; };
 		922A3BA0193C6E6200DAA556 /* ofxBaseGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBaseGui.cpp; sourceTree = "<group>"; };
 		922A3BA1193C6E6200DAA556 /* ofxBaseGui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBaseGui.h; sourceTree = "<group>"; };
 		922A3BA2193C6E6200DAA556 /* ofxButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxButton.cpp; sourceTree = "<group>"; };
@@ -440,14 +438,13 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				9218036F193DCDD500513433 /* sparkPacketUtils.h */,
 				92F94068193275AA002603DD /* common */,
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* ofApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				47F18B9D1933C6680008A0EE /* spark.cpp */,
 				47F18B9E1933C6680008A0EE /* spark.h */,
-				47D0241B1934FC41009AE08D /* packetHandler.cpp */,
-				47D0241C1934FC41009AE08D /* packetHandler.h */,
 				47D0241E1934FDA1009AE08D /* getOfLocalIp.h */,
 				92F9406B1932760A002603DD /* timer.h */,
 			);
@@ -550,7 +547,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				47D0241D1934FC41009AE08D /* packetHandler.cpp in Sources */,
 				922A3BEC193C6EF500DAA556 /* OscTypes.cpp in Sources */,
 				47F18B9F1933C6680008A0EE /* spark.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,

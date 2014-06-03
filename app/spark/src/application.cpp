@@ -5,19 +5,21 @@
 #include "communicationTypes.h"
 
 
+#define USE_SERIAL
+
+#ifdef USE_SERIAL
+    //#define PRINT_IP_ON_CONNECTION
+#endif 
+
+
 unsigned int localPort      = SPARKY_INCOMING_PORT;
 unsigned int outgoingPort   = SPARKY_OUTGOING_PORT;
-int led                     = D7;
-
-// //
-
 const int INCOMING_PACKET_SIZE = sizeof(ofToSparkyPacket);
 const int OUTGOING_PACKET_SIZE = sizeof(sparkyToOFPacket);
-
 byte  packetBufferIncoming[INCOMING_PACKET_SIZE];
 byte  packetBufferOutgoing[OUTGOING_PACKET_SIZE];
-
 UDP Udp;
+
 
 bool bOnline;       // are we online for real?
 
@@ -32,13 +34,31 @@ void loopOffline();
 
 int r, g, b;
 
+//-------------------------------------------------------------------------------
+// for calculating packet frame rate
+int frameCount = 0;
+int currentTime = 0;
+int previousTime = 0;
+float packetFps = 0;
+void calculateFPSGotPacket();
+void calculateFPS();
+
+// for calculating packet ordering issues
+int lastPacketReceived = 0;
+int packetOutOfOrderCount = 0;
+int packetMissedCount = 0;
+float outOfOrderPerSecond = 0;
+float missedPacketPerSecond = 0;
 
 
 //--------------------------------------------------------------
 void setup(){
     // we do very little network related or print out here, since this runs even before we are actually online
-    pinMode(led, OUTPUT);
+    
+#ifdef USE_SERIAL
     Serial.begin(9600);
+#endif
+    
     pwmSetup();
     
     r = 50;
@@ -65,14 +85,9 @@ void loop(){
         bOnline = true;
     }
     
-    Serial.println(".");
-    Serial.println(addr[0]);
-    Serial.println(addr[1]);
-    Serial.println(addr[2]);
-    Serial.println(addr[3]);
+
     
-    
-    
+
     if (bOnline == true && bOnlinePrev == false){
         Udp.begin(localPort);
     } else if (bOnline == false && bOnlinePrev == true){
@@ -85,19 +100,49 @@ void loop(){
     } else {
         loopOffline();
     }
+    
+    #ifdef PRINT_IP_ON_CONNECTION
+    if (bOnline == false && online == true){
+        Serial.println(".");
+        Serial.println(addr[0]);
+        Serial.println(addr[1]);
+        Serial.println(addr[2]);
+        Serial.println(addr[3]);
+    }
+    #endif
+
+    calculateFPS();
+    
+    
 }
 
 
 //--------------------------------------------------------------
 void loopOnline(){
     
-    if (int nbytes = Udp.parsePacket()) {
+    #ifdef USE_SERIAL
+    Serial.println(packetFps);
+    #endif
     
+    
+    if (int nbytes = Udp.parsePacket()) {
+ 
+        
         if (nbytes != INCOMING_PACKET_SIZE){
             
-            // TODO handle this
+            if (nbytes % INCOMING_PACKET_SIZE == 0){
+                
+               
+                int nPackets =  nbytes / INCOMING_PACKET_SIZE;
+//                 Serial.println("multipacket");
+//                Serial.println(nPackets);
+                for (int i = 0; i < nPackets; i++){
+                    Udp.read(packetBufferIncoming, INCOMING_PACKET_SIZE);
+                    handlePacket(packetBufferIncoming);
+                }
+            }
             
-            Serial.println("bad packet ???");
+            
         
         } else {
             
@@ -126,6 +171,8 @@ void loopOffline(){
 void handlePacket( byte * data){
     
     
+    calculateFPSGotPacket();
+    
     // todo: error checking?
     
 
@@ -142,17 +189,19 @@ void handlePacket( byte * data){
     serverIp[1] = O2Spacket.ofIp >> 16 & 0xFF;
     serverIp[2] = O2Spacket.ofIp >> 8 & 0xFF;
     serverIp[3] = O2Spacket.ofIp & 0xFF;
+    
+    
+    int packetCount = O2Spacket.packetCount;
+    
+    if (packetCount < lastPacketReceived){
+        packetOutOfOrderCount++;
+    } else if ( packetCount - lastPacketReceived != 1){
+        packetMissedCount += (packetCount - lastPacketReceived);
+    }
+    lastPacketReceived = packetCount;
+    
+    
 
-
-    Serial.println(serverIp[0]);
-    Serial.println(serverIp[1]);
-    Serial.println(serverIp[2]);
-    Serial.println(serverIp[3]);
-    
-    
-    
-    
-    
     // if it's a discovery or heartbeat packet, return something
     if (O2Spacket.packetType == PACKET_TYPE_DISCOVERY || O2Spacket.packetType == PACKET_TYPE_HEARTBEAT){
         
@@ -169,6 +218,13 @@ void handlePacket( byte * data){
         unsigned char d = addr[3];
         int addressAsInt = a << 24 | b << 16 | c << 8 | d;
         S2Opacket.ipSpark = addressAsInt;
+        
+        S2Opacket.sparkDataFrameRate = packetFps;
+        S2Opacket.outOfOrderPerSecond = outOfOrderPerSecond;
+        S2Opacket.missedPacketPerSecond = missedPacketPerSecond;
+        
+        // MAC ADDRESS ?
+        
         // gray our ID (uuid)
         String uuidTemp = Spark.deviceID();
         // memcpy packet into byte array:
@@ -178,6 +234,7 @@ void handlePacket( byte * data){
         memcpy(packetBufferOutgoing, &S2Opacket, OUTGOING_PACKET_SIZE);
         Udp.write(packetBufferOutgoing, OUTGOING_PACKET_SIZE);
         Udp.endPacket();
+        
 
       
         
@@ -192,21 +249,47 @@ void handlePacket( byte * data){
         
         
     }
-    
-//    Serial.print(Udp.remoteIP());
-//    Serial.print("r: ");
-//    Serial.print(O2Spacket.r);
-//    Serial.print("g: ");
-//    Serial.print(O2Spacket.g);
-//    Serial.print("b: ");
-//    Serial.print(O2Spacket.b);
-//    Serial.print("time: ");
-//    Serial.println(O2Spacket.time);
-    
-    // S->O packet
-    
-    
-    
-    
-    
 }
+
+
+
+//--------------------------------------------------------------
+void calculateFPSGotPacket(){
+    frameCount++;
+}
+//--------------------------------------------------------------
+
+void calculateFPS(){
+//  Get the number of milliseconds since glutInit called
+//  (or first call to glutGet(GLUT ELAPSED TIME)).
+currentTime = millis();
+
+//  Calculate time passed
+int timeInterval = currentTime - previousTime;
+    
+
+if(timeInterval > 100)
+{
+    //  calculate the number of frames per second
+    packetFps = frameCount / (float)(timeInterval / 100.0);
+    
+    /*
+     int lastPacketReceived = 0;
+     int packetOutOfOrderCount = 0;
+     int packetMissedCount = 0;
+     */
+    
+    outOfOrderPerSecond = packetOutOfOrderCount / (float)(timeInterval / 100.0);
+    missedPacketPerSecond = packetMissedCount / (float)(timeInterval / 100.0);
+    
+    //  Set time
+    previousTime = currentTime;
+    
+    //  Reset frame count
+    packetOutOfOrderCount = 0;
+    packetMissedCount = 0;
+    frameCount = 0;
+}
+}
+//-------------------------------------------------------------------------------
+

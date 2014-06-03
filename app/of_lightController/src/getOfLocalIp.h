@@ -75,6 +75,10 @@ public:
     
     int getInt(){
         parse();
+        
+        if (localIp == "") return 0;
+        
+        //cout << localIp << endl;
         vector<string> ipBreakdown = ofSplitString(localIp, ".");
         
         unsigned char a = ofToInt(ipBreakdown[0]);

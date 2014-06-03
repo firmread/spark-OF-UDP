@@ -27,7 +27,12 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-    ofClear(0,0,0);
+    if (ofGetFrameNum() % 3 == 0){
+        ofClear(ofRandom(0,255), ofRandom(0,255), ofRandom(0,255));
+    } else {
+        ofClear(0,0,0);
+        
+    }
     ofFill();
     ofSetColor(255,255,255);
     img.draw(pos, 0); //(mouseX,0,500,500);

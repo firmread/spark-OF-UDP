@@ -1,5 +1,5 @@
 #include "ofApp.h"
-
+#include "sparkPacketUtils.h"
 
 //--------------------------------------------------------------
 bool sortSpark(const spark &a, const spark &b) {
@@ -20,7 +20,7 @@ void ofApp::loadUUIDList(){
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    ofSetCircleResolution(100);
+    ofSetCircleResolution(20);
     
     
     getOfLocalIp readIp;
@@ -37,17 +37,32 @@ void ofApp::setup(){
 	udp.Create();
 	udp.Bind(7777);
     udp.SetNonBlocking(true);
-    //heart.setup(500);
+    heart.setup(200);
+    colorTimer.setup( (int)((1.0/80.0) * 1000.0));
     
     loadUUIDList();
     
     gui.setup();
     gui.add(useOsc.setup("use OSC", true));
+    
+    gui.add(heartbeatFrameRate.setup("heartbeat frame rate", 2, 0.1, 100));
+    gui.add(colorFrameRate.setup("color frame rate", 30, 0.1, 100));
+    gui.add(verticalSync.setup("vertical sync", false));
+    
+
+    
     gui.add(sendColor.setup("send color data to lights", true));
+    gui.add(sendHeartbeat.setup("send hearbeat data to lights", true));
+    gui.add(sendOneHeartbeat.setup("send one hearbeat data to lights", true));
     gui.add(flipRgb.setup("flip rgb to bgr on send", true));
     gui.add(setAllWhite.setup("set all white", false));
     gui.add(setAllBlack.setup("set all black", false));
     gui.add(setAllRandom.setup("set all random", false));
+    
+    
+    
+    
+    
 
     gui.setPosition(500,70);
     
@@ -57,17 +72,53 @@ void ofApp::setup(){
     
     colorValuesForOutput.assign(50, ofColor(ofColor::gray));
     
+    //ofSetVerticalSync(false);
+    //ofSetFrameRate(60);
 }
 
 
+bool bLastSync = false;
 
 //--------------------------------------------------------------
 void ofApp::update(){
     
     
-    if (ofGetFrameNum() % 2 == 0){
-        fireDiscovery();
+    
+    heart.setTimer((int)((1.0/heartbeatFrameRate) * 1000.0));
+    colorTimer.setTimer((int)((1.0/colorFrameRate) * 1000.0));
+    
+
+    if (bLastSync != verticalSync){
+        ofSetVerticalSync(verticalSync);
     }
+    bLastSync =verticalSync;
+    
+    
+    
+    heart.update(ofGetElapsedTimeMillis());
+    if (heart.bTimerFired() && sendHeartbeat){
+        
+        for (int i = 0; i < sparks.size(); i++){
+            sparks[i].bSendHeartBeat = true;
+        }
+    }
+    
+    if (sendOneHeartbeat == true){
+        sendOneHeartbeat = false;
+        for (int i = 0; i < sparks.size(); i++){
+            sparks[i].bSendHeartBeat = true;
+        }
+    }
+    
+    colorTimer.update(ofGetElapsedTimeMillis());
+        if (colorTimer.bTimerFired() && sendColor){
+            sendColorData();
+        }
+    
+    
+    //if (ofGetFrameNum() % 100 == 0){
+    //    fireDiscovery();
+    //}
     
     
     if (setAllWhite == true){
@@ -125,9 +176,9 @@ void ofApp::update(){
     
     
     
-    if (sendColor){
-        sendColorData();
-    }
+//    if (sendColor && ofGetFrameNum() % 2 == 0){
+//        sendColorData();
+//    }
     
 	char udpMessage[sizeof(sparkyToOFPacket)];
     memset(udpMessage, 0, sizeof(sparkyToOFPacket));
@@ -144,28 +195,30 @@ void ofApp::update(){
         if(nBytesRevd == sizeof(sparkyToOFPacket)){
             bGotSth = true;
             
-            cout << "got data" << endl;
-            //get info to packet
+            // this is imporant, I don't think we should time against all this junk here.
+            
+            float receivedTime = ofGetElapsedTimef();
             memset(&S2Opacket, 0, sizeof(sparkyToOFPacket));
             memcpy(&S2Opacket, udpMessage, sizeof(sparkyToOFPacket));
             
+            string ipThisPacket = ipFromInt( S2Opacket.ipSpark);
             
-            packetHandler ph(S2Opacket);
+            //packetHandler ph(S2Opacket);
             
             bool bDoesThisSparkExist = false;
             for (int i = 0; i < sparks.size(); i++){
-                if (sparks[i].ip == ph.ipSparkString){
-                    cout << "ph.ipSparkString : " << i << " : " << sparks[i].ip << endl;
+                if (sparks[i].ip == ipThisPacket ){
+                    //cout << "ph.ipSparkString : " << i << " : " << sparks[i].ip << endl;
                     bDoesThisSparkExist = true;
                 }
             }
             
+            
+            
             // register it if we never seen it before
             if (!bDoesThisSparkExist){
+                
                 spark temp;
-                
-                cout << "create object for " << ph.ipSparkString << endl;
-                
                 sparks.push_back(temp);
                 sparks[sparks.size()-1].setup(S2Opacket);
                 sparks[sparks.size()-1].boardNumber = uuidMapping[sparks[sparks.size()-1].uuid];
@@ -174,9 +227,11 @@ void ofApp::update(){
             // otherwise, welcome back our beloved sparky!  !
             } else {
                 
+                
+                
                 for (int i = 0; i< sparks.size(); i++) {
-                    if(sparks[i].ip == ph.ipSparkString){
-                        sparks[i].readPacketFromSpark(S2Opacket);
+                    if(sparks[i].ip == ipThisPacket ){
+                       sparks[i].readPacketFromSpark(S2Opacket, receivedTime);
                     }
                 }
             }
@@ -205,9 +260,13 @@ void ofApp::draw(){
     ofBackgroundGradient(80, 0);
     string sparksNo = ofToString(sparks.size());
 
-    for (int i =0; i< sparks.size(); i++){
-        sparks[i].draw(100, 100+100*i);
-    }
+//    for (int i =0; i< sparks.size(); i++){
+//        sparks[i].draw(100, 100+100*i);
+//    }
+        for (int i =0; i< sparks.size(); i++){
+            sparks[i].drawSmall(100, 100+30*i);
+        }
+    
     
     
     ofDrawBitmapStringHighlight("conneting light control\n" + myIPaddressString, 500, 20);
@@ -243,9 +302,9 @@ void ofApp::draw(){
 void ofApp::keyPressed(int key){
     
     
-//    if (key == ' '){
-//        fireDiscovery();
-//    }
+    if (key == ' '){
+        fireDiscovery();
+    }
     
     if (key == 'c'){
         //fireControl();
@@ -260,7 +319,7 @@ void ofApp::fireDiscovery(){
     
     // TODO:  MULTICAST ???
     
-    
+    cout << "firing discovery" << endl;
     memset(&O2Spacket, 0, sizeof(ofToSparkyPacket));
     O2Spacket.packetType = PACKET_TYPE_DISCOVERY;
     
@@ -269,34 +328,35 @@ void ofApp::fireDiscovery(){
     O2Spacket.ofPacketSentOutTime = ofGetElapsedTimef();
     memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));
     
-    ofxUDPManager udp4discovery;
-    udp4discovery.Create();
-    udp4discovery.SetEnableBroadcast(true);
-    udp4discovery.Connect("192.168.10.255", 8888);
-    udp4discovery.Send(packetBytes,sizeof(ofToSparkyPacket));
-    udp4discovery.Close();
-    
-    
-    
-//    for (int i = 0; i < 256; i++){
-//        
-//        string IP = myIPadressJustFirstThree + ofToString(i);
-//        
-//        bool bFoundAlready = false;
-//        for (int j = 0; j < sparks.size(); j++){
-//            if (sparks[j].ip == IP){
-//                bFoundAlready = true;
-//            }
-//        }
-//        
-//        if (!bFoundAlready){
-//            udp4discovery.Create();
-//            udp4discovery.Connect(IP.c_str(),8888);
-//            udp4discovery.SetNonBlocking(false);
-//            udp4discovery.Send(packetBytes,sizeof(ofToSparkyPacket));
-//            //ofSleepMillis(30);
-//        }
-//    }
+//    udp4discovery.Create();
+//    udp4discovery.SetEnableBroadcast(true);
+//    udp4discovery.SetNonBlocking(false);
+//    udp4discovery.Connect("192.168.10.255", 8888);
+//    
+//    udp4discovery.Send(packetBytes,sizeof(ofToSparkyPacket));
+//    udp4discovery.Close();
+//
+//    
+//    
+    for (int i = 2; i < 254; i++){
+        
+        string IP = myIPadressJustFirstThree + ofToString(i);
+        
+        bool bFoundAlready = false;
+        for (int j = 0; j < sparks.size(); j++){
+            if (sparks[j].ip == IP){
+                bFoundAlready = true;
+            }
+        }
+        
+        if (!bFoundAlready){
+            udp4discovery.Create();
+            udp4discovery.Connect(IP.c_str(),8888);
+            udp4discovery.SetNonBlocking(false);
+            udp4discovery.Send(packetBytes,sizeof(ofToSparkyPacket));
+            //ofSleepMillis(1);
+        }
+    }
     
 
 }
@@ -326,6 +386,10 @@ void ofApp::sendColorData(){
             O2Spacket.g = colorToSend.g;
             O2Spacket.b = colorToSend.b;
         }
+        
+        
+        O2Spacket.packetCount = sparks[i].sparkSentCount++;
+        
         
         memcpy(packetBytes, &O2Spacket, sizeof(ofToSparkyPacket));
         

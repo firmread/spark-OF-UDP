@@ -43,8 +43,11 @@ public:
     //heartbeat
     sparkyToOFPacket S2Opacket;
 
+    
+    ofxUDPManager udp4discovery;
 
     timer heart;
+    timer colorTimer;
     int delay;
     string convertIpToString(int ip);
     void fireDiscovery();
@@ -58,10 +61,16 @@ public:
     
     ofxToggle   useOsc;
     ofxToggle   sendColor;
+    ofxToggle   sendHeartbeat;
+    ofxToggle   sendOneHeartbeat;
     ofxToggle   flipRgb;
     ofxToggle   setAllWhite;
     ofxToggle   setAllBlack;
     ofxToggle   setAllRandom;
+    ofxToggle   verticalSync;
+    ofxFloatSlider   colorFrameRate;
+    ofxFloatSlider   heartbeatFrameRate;
+    
 	ofxPanel    gui;
     
     // OSC
