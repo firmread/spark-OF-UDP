@@ -3,7 +3,7 @@
 #include "pwm.h"
 #include "communicationDefines.h"
 #include "communicationTypes.h"
-
+#include <math.h>
 
 #define USE_SERIAL
 
@@ -34,6 +34,13 @@ void loopOffline();
 
 int r, g, b;
 
+struct color {
+    int r, g, b;
+};
+
+color previousColor, targetColor;
+int targetTime, transitionTime;
+
 //-------------------------------------------------------------------------------
 // for calculating packet frame rate
 int frameCount = 0;
@@ -50,6 +57,11 @@ int packetMissedCount = 0;
 float outOfOrderPerSecond = 0;
 float missedPacketPerSecond = 0;
 
+float outOfOrderPerSecondSmooth = 0;
+float missedPacketPerSecondSmooth = 0;
+float packetFpsSmooth = 0;
+
+
 
 //--------------------------------------------------------------
 void setup(){
@@ -65,14 +77,41 @@ void setup(){
     g = 50;
     b = 50;
     
+    targetColor.r = 50;
+    targetColor.g = 50;
+    targetColor.b = 50;
+    
     delay(5);
 }
 
 //--------------------------------------------------------------
 void loop(){
+    
+    outOfOrderPerSecondSmooth = 0.95 * outOfOrderPerSecondSmooth + 0.05 * outOfOrderPerSecond;
+    missedPacketPerSecondSmooth = 0.95 * outOfOrderPerSecondSmooth + 0.05 * missedPacketPerSecond;
+    packetFpsSmooth = 0.95 * packetFpsSmooth + 0.05 * packetFps;
+    
+
+    
 
     //----------------------- are we online for real?
     
+    if ((targetColor.r != r)||(targetColor.g != g)||(targetColor.b != b)) {
+        if (millis() > targetTime || transitionTime == 0) {
+            r = targetColor.r;
+            g = targetColor.g;
+            b = targetColor.b;
+        } else {
+            float timeFrame = (targetTime - millis());
+            float phase = 1 - (timeFrame)/(float)transitionTime;
+            float easingFunc = pow(phase, 2) / (pow(phase,2) + pow(1 - phase, 2));
+            // setting up r,g,b with easing func:
+            r = previousColor.r + (int)((float)targetColor.r - (float)previousColor.r) * easingFunc;
+            g = previousColor.g + (int)((float)targetColor.g - (float)previousColor.g) * easingFunc;
+            b = previousColor.b + (int)((float)targetColor.b - (float)previousColor.b) * easingFunc;
+        }
+    }
+
     pwm (r,g,b);
     
     bool bOnlinePrev = bOnline;
@@ -121,7 +160,7 @@ void loop(){
 void loopOnline(){
     
     #ifdef USE_SERIAL
-    Serial.println(packetFps);
+        Serial.println(packetFps);
     #endif
     
     
@@ -219,9 +258,9 @@ void handlePacket( byte * data){
         int addressAsInt = a << 24 | b << 16 | c << 8 | d;
         S2Opacket.ipSpark = addressAsInt;
         
-        S2Opacket.sparkDataFrameRate = packetFps;
-        S2Opacket.outOfOrderPerSecond = outOfOrderPerSecond;
-        S2Opacket.missedPacketPerSecond = missedPacketPerSecond;
+        S2Opacket.sparkDataFrameRate = packetFpsSmooth;
+        S2Opacket.outOfOrderPerSecond = outOfOrderPerSecondSmooth;
+        S2Opacket.missedPacketPerSecond = missedPacketPerSecondSmooth;
         
         // MAC ADDRESS ?
         
@@ -242,11 +281,42 @@ void handlePacket( byte * data){
         
         // don't respond, right?
         
-         r = O2Spacket.r;
-         g = O2Spacket.g;
-         b = O2Spacket.b;
-       
-        
+        if ((O2Spacket.r != targetColor.r)||(O2Spacket.g != targetColor.g)||(O2Spacket.b != targetColor.b)) {
+            
+            if (O2Spacket.transitionTime != 0){
+            
+                previousColor.r = r;
+                previousColor.g = g;
+                previousColor.b = b;
+                //
+                targetColor.r = O2Spacket.r;
+                targetColor.g = O2Spacket.g;
+                targetColor.b = O2Spacket.b;
+
+                // defaulting transition to second
+                transitionTime = O2Spacket.transitionTime;
+
+                targetTime = millis() + transitionTime;
+            } else {
+                previousColor.r = O2Spacket.r;
+                previousColor.g = O2Spacket.g;
+                previousColor.b = O2Spacket.b;
+                //
+                targetColor.r = O2Spacket.r;
+                targetColor.g = O2Spacket.g;
+                targetColor.b = O2Spacket.b;
+                
+                r =O2Spacket.r;
+                g =O2Spacket.g;
+                b =O2Spacket.b;
+                
+                
+                transitionTime = 0;
+                
+                targetTime = millis();
+                
+            }
+        }
         
     }
 }
@@ -260,36 +330,30 @@ void calculateFPSGotPacket(){
 //--------------------------------------------------------------
 
 void calculateFPS(){
-//  Get the number of milliseconds since glutInit called
-//  (or first call to glutGet(GLUT ELAPSED TIME)).
-currentTime = millis();
 
-//  Calculate time passed
-int timeInterval = currentTime - previousTime;
+    currentTime = millis();
+
+    //  Calculate time passed
+    int timeInterval = currentTime - previousTime;
     
 
-if(timeInterval > 100)
-{
-    //  calculate the number of frames per second
-    packetFps = frameCount / (float)(timeInterval / 100.0);
+    if(timeInterval > 1000){
+        //  calculate the number of frames per second
+        packetFps = frameCount / (float)(timeInterval / 1000.0);
+        
+        Serial.println(packetFps);
     
-    /*
-     int lastPacketReceived = 0;
-     int packetOutOfOrderCount = 0;
-     int packetMissedCount = 0;
-     */
+        outOfOrderPerSecond = packetOutOfOrderCount / (float)(timeInterval / 1000.0);
+        missedPacketPerSecond = packetMissedCount / (float)(timeInterval / 1000.0);
     
-    outOfOrderPerSecond = packetOutOfOrderCount / (float)(timeInterval / 100.0);
-    missedPacketPerSecond = packetMissedCount / (float)(timeInterval / 100.0);
+        //  Set time
+        previousTime = currentTime;
     
-    //  Set time
-    previousTime = currentTime;
-    
-    //  Reset frame count
-    packetOutOfOrderCount = 0;
-    packetMissedCount = 0;
-    frameCount = 0;
-}
+        //  Reset frame count
+        packetOutOfOrderCount = 0;
+        packetMissedCount = 0;
+        frameCount = 0;
+    }
 }
 //-------------------------------------------------------------------------------
 

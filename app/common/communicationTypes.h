@@ -8,6 +8,7 @@ typedef struct {
     unsigned char r;
     unsigned char g;
     unsigned char b;
+    int transitionTime;             // 0 = instantaneous :) (argument =
     int packetCount;                // each packet will be sent in order.  maybe we can drop packets that are old, etc.
 } ofToSparkyPacket;
 

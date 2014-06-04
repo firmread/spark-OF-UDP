@@ -14,87 +14,57 @@
 spark::spark(){
     transferTime = -1;
     nPacketsReceived = 0;
-    heartRate = 2000;
-    t.setup(heartRate);
     fadingBeep = 0;
     bSendHeartBeat = false;
     
 }
 
 void spark::setup(sparkyToOFPacket & s2oInit){
-    
-    
-    bUdpConnected = false;
- 
-    //udp.Create();
-    //bUdpConnected = udp.Connect(ph.ipSparkString.c_str(), 8888);
-    //udp.SetNonBlocking(true);
-    
     ip = ipFromInt(s2oInit.ipSpark);
     uuid = uuidFromCharArray(s2oInit.uuid);
     millisRunning = s2oInit.millisRunning;
-    
     transferTime = ofGetElapsedTimef() - s2oInit.ofPacketSentOutTime;
-    
     nPacketsReceived = 1;
     sparkSentCount = 0;
 
+    packetPerSecond.setup();
+    missedPerSecond.setup();
+    outOfOrderPerSecond.setup();
+    
+    packetPerSecond.min = 0;
+    packetPerSecond.max = 90.0;
+    
+    missedPerSecond.min = 0;
+    missedPerSecond.max = 10;
+    
+    outOfOrderPerSecond.min = 0;
+    outOfOrderPerSecond.max = 10;
+    
 }
 
 
 void spark::update(){
     
+    // heartbeat flag:
     
-    //cout << ip << " " << bUdpConnected << endl;
-//    if (!bUdpConnected){
-//        cout << "trying again to connect ??? " << endl;
-//        bUdpConnected = udp.Connect(ip.c_str(), 8888);
-//        return;
-//        
-//    }
-    
-    //beat
-    
-//    t.setTimer(heartRate);
-//    t.update(ofGetElapsedTimeMillis());
-//    if(t.bTimerFired()){
     if (bSendHeartBeat){
         bSendHeartBeat = false;
         memset(&o2s, 0, sizeof(ofToSparkyPacket));
         o2s.packetType = PACKET_TYPE_HEARTBEAT;
-        
-        //getOfLocalIp readIp;
         o2s.ofIp = ((ofApp *) ofGetAppPtr())->myIPaddressInt;
-        
         char packetBytes[sizeof(ofToSparkyPacket)];
         o2s.ofPacketSentOutTime = ofGetElapsedTimef();
         o2s.packetCount = sparkSentCount++;
-        
         memcpy(packetBytes, &o2s, sizeof(ofToSparkyPacket));
-
-        //int sent = udp.Send(packetBytes,sizeof(ofToSparkyPacket));
-        //cout << ip << " " << sent << endl;
-        
         udp.Create();
         udp.Connect(ip.c_str(), 8888);
         int sent =  udp.Send(packetBytes, sizeof(ofToSparkyPacket));
-        //cout << sent << " " << ip << endl;
         udp.Close();
-        
-        //if (sent == -1){
-         //   udp.Close();
-         //   udp.Create();
-         //   bUdpConnected = udp.Connect(ip.c_str(), 8888);
-       // }
-
     }
-    
-    // add timer
-    // do heartbeat
-    
 }
 
 void spark::draw(int x, int y){
+    
     ofPushMatrix();
     ofTranslate(x, y);
     
@@ -117,6 +87,8 @@ void spark::draw(int x, int y){
                         "\nbordNum :" + ofToString(boardNumber), 0,0);
     
     ofPopMatrix();
+    
+   
     
 }
 
@@ -142,27 +114,29 @@ void spark::drawSmall(int x, int y){
                        " transfT: " + ofToString(transferTime) +
                        " bordNum: " + ofToString(boardNumber), 0,0);
     
+    
+    packetPerSecond.draw( ofRectangle(400,0, 50, 20) );
+    missedPerSecond.draw( ofRectangle(500,0, 50, 20) );
+    outOfOrderPerSecond.draw( ofRectangle(600,0, 50, 20) );
+    
     ofPopMatrix();
     
 }
 
 
-//void spark::sendPacketToSpark(ofToSparkyPacket o2s){
-//    
-//}
-
-//void spark::readPacketFromSpark(char * udpMessage){
 void spark::readPacketFromSpark(sparkyToOFPacket & s2oRead, float readTime){
 
     bGotPacket = true;
-//    //pass data to local variables
-//    memset(&s2o, 0, sizeof(sparkyToOFPacket));
-//    memcpy(&s2o, udpMessage, sizeof(sparkyToOFPacket));
-
-    //packetHandler ph(s2oRead);
     millisRunning = s2oRead.millisRunning;
     uuid = uuidFromCharArray(s2oRead.uuid);
     nPacketsReceived++;
     transferTime = readTime - s2oRead.ofPacketSentOutTime;
+    
+    packetPerSecond.addValue(s2oRead.sparkDataFrameRate);
+    missedPerSecond.addValue(s2oRead.missedPacketPerSecond );
+    outOfOrderPerSecond.addValue(s2oRead.outOfOrderPerSecond);
+    
+    
+    
     cout << s2oRead.sparkDataFrameRate << "  out of order " <<  s2oRead.missedPacketPerSecond   <<  " missed " << s2oRead.outOfOrderPerSecond << endl;
 }

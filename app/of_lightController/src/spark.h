@@ -18,6 +18,60 @@
 #include "getOfLocalIp.h"
 #include "packetHandler.h"
 
+
+class graph {
+
+public:
+    
+    float min;
+    float max;
+    int valuesToStore;
+    vector < float > values;
+    bool bLearnMinMaxAutomatically;
+    bool smoothToMinMax;
+    
+    void setup(){
+        bLearnMinMaxAutomatically = true;
+        smoothToMinMax = true;
+        min = max = 0;
+        valuesToStore = 30;
+    }
+    
+    void addValue( float val ){
+        values.push_back(val);
+        while (values.size() > valuesToStore) values.erase(values.begin());
+        
+        //float recentMin = *std::min_element(values.begin(), values.end());
+        //float recentMax = *std::max_element(values.begin(), values.end());
+        
+        //min = 0.99f * min + 0.01 * recentMin;
+        //max = 0.99f * max + 0.01 * recentMax;
+        
+    }
+    
+    void draw( ofRectangle rect ){
+        ofFill();
+        ofSetColor(0,0,0);
+        ofRect(rect);
+        
+        ofNoFill();
+        ofSetColor(255);
+        ofMesh mesh;
+        mesh.setMode(OF_PRIMITIVE_LINE_STRIP);
+        
+        for (int i = 0; i < values.size(); i++){
+            mesh.addVertex( ofPoint(ofMap(i,0,values.size()-1, rect.x, rect.x+rect.width,true),
+                                    ofMap(values[i], min, max, rect.y+ rect.height, rect.y, true) ));
+        }
+        //mesh.addVertex( ofPoint(rect.x, rect.y) + ofPoint(rect.width, rect.height));
+        //mesh.addVertex( ofPoint(rect.x, rect.y) + ofPoint(rect.width, rect.height));
+        
+        mesh.draw();
+    }
+    
+};
+
+
 class spark{
 public:
     
@@ -32,17 +86,18 @@ public:
     void update();
     void draw(int x, int y);
     void drawSmall(int x, int y);
-     
-//    void sendPacketToSpark(ofToSparkyPacket o2s);
-//    void readPacketFromSpark(char * udpMessage);
     void readPacketFromSpark(sparkyToOFPacket & s2oread, float readTime);
+    
+    graph packetPerSecond;
+    graph missedPerSecond;
+    graph outOfOrderPerSecond;
+    
     
     int millisRunning;
     float lastContactTime;
     int nPacketsReceived;
     
     float transferTime;
-    
     bool bGotPacket;  
     float fadingBeep;
     
@@ -50,13 +105,9 @@ public:
     int boardNumber;
     ofxUDPManager udp;
     string ip;
-    sparkyToOFPacket s2o;
     ofToSparkyPacket o2s;
     
-    timer t;
-    float heartRate;
     
-    bool bUdpConnected;
     
 };
 

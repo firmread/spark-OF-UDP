@@ -70,6 +70,7 @@ public:
     ofxToggle   verticalSync;
     ofxFloatSlider   colorFrameRate;
     ofxFloatSlider   heartbeatFrameRate;
+    ofxIntSlider   interpolateRate;
     
 	ofxPanel    gui;
     

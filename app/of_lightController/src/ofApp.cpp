@@ -28,10 +28,14 @@ void ofApp::setup(){
     myIPaddressString = readIp.getString();
     vector < string > ipSplit = ofSplitString(myIPaddressString, ".");
     myIPadressJustFirstThree = "";
-    for (int i = 0; i < 3; i++){
-        myIPadressJustFirstThree += ipSplit[i] + ".";
-    }
     
+    if (ipSplit.size() == 4){
+        for (int i = 0; i < 3; i++){
+            myIPadressJustFirstThree += ipSplit[i] + ".";
+        }
+    } else {
+        myIPadressJustFirstThree = "0.0.0.";
+    }
     
     
 	udp.Create();
@@ -43,27 +47,24 @@ void ofApp::setup(){
     loadUUIDList();
     
     gui.setup();
+    
     gui.add(useOsc.setup("use OSC", true));
     
-    gui.add(heartbeatFrameRate.setup("heartbeat frame rate", 2, 0.1, 100));
-    gui.add(colorFrameRate.setup("color frame rate", 30, 0.1, 100));
+    gui.add(heartbeatFrameRate.setup("heartbeat (fps)", 2, 0.1, 100));
+    gui.add(colorFrameRate.setup("color (fps)", 30, 0.1, 100));
+    gui.add(interpolateRate.setup("interpolate speed", 1000, 0, 3000));
     gui.add(verticalSync.setup("vertical sync", false));
     
 
     
-    gui.add(sendColor.setup("send color data to lights", true));
-    gui.add(sendHeartbeat.setup("send hearbeat data to lights", true));
-    gui.add(sendOneHeartbeat.setup("send one hearbeat data to lights", true));
+    gui.add(sendColor.setup("send color data", true));
+    gui.add(sendHeartbeat.setup("send hearbeat data", true));
+    gui.add(sendOneHeartbeat.setup("send one hearbeat", true));
     gui.add(flipRgb.setup("flip rgb to bgr on send", true));
     gui.add(setAllWhite.setup("set all white", false));
     gui.add(setAllBlack.setup("set all black", false));
     gui.add(setAllRandom.setup("set all random", false));
     
-    
-    
-    
-    
-
     gui.setPosition(500,70);
     
     receiver.setup(PORT);
@@ -386,6 +387,8 @@ void ofApp::sendColorData(){
             O2Spacket.g = colorToSend.g;
             O2Spacket.b = colorToSend.b;
         }
+        
+        O2Spacket.transitionTime = interpolateRate;
         
         
         O2Spacket.packetCount = sparks[i].sparkSentCount++;
