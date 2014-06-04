@@ -4,30 +4,39 @@ int frameCount = 0;
 int currentTime = 0;
 int previousTime = 0;
 float packetFps = 0;
-void calculateFPSGotPacket();
-void calculateFPS();
-
-// for calculating packet ordering issues
 int lastPacketReceived = 0;
 int packetOutOfOrderCount = 0;
 int packetMissedCount = 0;
 float outOfOrderPerSecond = 0;
 float missedPacketPerSecond = 0;
-
 float outOfOrderPerSecondSmooth = 0;
 float missedPacketPerSecondSmooth = 0;
 float packetFpsSmooth = 0;
 
 
-
-
 //--------------------------------------------------------------
-void calculateFPSGotPacket(){
+void statsGotPacket(){
     frameCount++;
 }
+
+void statsLookAtPacketOrder( int newPacketNum ){
+	if (newPacketNum <= lastPacketReceived){
+        newPacketNum++;
+    } else if ( newPacketNum - lastPacketReceived != 1){
+        packetMissedCount += (newPacketNum - lastPacketReceived);
+    }
+    lastPacketReceived = newPacketNum;
+}
+
+void statsUpdate(){
+	outOfOrderPerSecondSmooth = 0.95 * outOfOrderPerSecondSmooth + 0.05 * outOfOrderPerSecond;
+    missedPacketPerSecondSmooth = 0.95 * outOfOrderPerSecondSmooth + 0.05 * missedPacketPerSecond;
+    packetFpsSmooth = 0.95 * packetFpsSmooth + 0.05 * packetFps;
+}
+
 //--------------------------------------------------------------
 
-void calculateFPS(){
+void statsCalculateFPS(){
 
     currentTime = millis();
 

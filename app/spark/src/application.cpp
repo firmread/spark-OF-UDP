@@ -21,12 +21,10 @@ byte  packetBufferIncoming[INCOMING_PACKET_SIZE];
 byte  packetBufferOutgoing[OUTGOING_PACKET_SIZE];
 UDP Udp;
 
-
 bool bOnline;       // are we online for real?
 
 ofToSparkyPacket O2Spacket;
 sparkyToOFPacket S2Opacket;
-
 
 // function declaration:
 void handlePacket( byte * data);
@@ -48,9 +46,9 @@ int targetTime, transitionTime;
 void setup(){
     // we do very little network related or print out here, since this runs even before we are actually online
     
-#ifdef USE_SERIAL
-    Serial.begin(9600);
-#endif
+    #ifdef USE_SERIAL
+        Serial.begin(9600);
+    #endif
     
     pwmSetup();
     
@@ -70,11 +68,7 @@ void loop(){
     
     
     
-    
-    outOfOrderPerSecondSmooth = 0.95 * outOfOrderPerSecondSmooth + 0.05 * outOfOrderPerSecond;
-    missedPacketPerSecondSmooth = 0.95 * outOfOrderPerSecondSmooth + 0.05 * missedPacketPerSecond;
-    packetFpsSmooth = 0.95 * packetFpsSmooth + 0.05 * packetFps;
-    
+    statsUpdate();          // smooth out the stats over time
 
     
 
@@ -139,7 +133,7 @@ void loop(){
     }
     #endif
 
-    calculateFPS();
+    statsCalculateFPS();
     
     
 }
@@ -199,13 +193,11 @@ void loopOffline(){
 void handlePacket( byte * data){
     
     
-    calculateFPSGotPacket();
-    
+    statsGotPacket();
     // todo: error checking?
     
 
     // handle O->S packet
-    
     // clear memory, copy bytes into struct...
     memset(&O2Spacket, 0, INCOMING_PACKET_SIZE);
     memcpy(&O2Spacket, data, INCOMING_PACKET_SIZE);
@@ -219,16 +211,9 @@ void handlePacket( byte * data){
     serverIp[3] = O2Spacket.ofIp & 0xFF;
     
     
-    int packetCount = O2Spacket.packetCount;
+    statsLookAtPacketOrder(O2Spacket.packetCount);
     
-    if (packetCount < lastPacketReceived){
-        packetOutOfOrderCount++;
-    } else if ( packetCount - lastPacketReceived != 1){
-        packetMissedCount += (packetCount - lastPacketReceived);
-    }
-    lastPacketReceived = packetCount;
-    
-    
+
 
     // if it's a discovery or heartbeat packet, return something
     if (O2Spacket.packetType == PACKET_TYPE_DISCOVERY || O2Spacket.packetType == PACKET_TYPE_HEARTBEAT){
