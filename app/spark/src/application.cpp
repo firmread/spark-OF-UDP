@@ -41,9 +41,9 @@ color previousColor, targetColor;
 int targetTime, transitionTime;
 
 
-
 //--------------------------------------------------------------
 void setup(){
+    
     // we do very little network related or print out here, since this runs even before we are actually online
     
     #ifdef USE_SERIAL
@@ -153,31 +153,20 @@ void loopOnline(){
         if (nbytes != INCOMING_PACKET_SIZE){
             
             if (nbytes % INCOMING_PACKET_SIZE == 0){
-                
-               
                 int nPackets =  nbytes / INCOMING_PACKET_SIZE;
-//                 Serial.println("multipacket");
-//                Serial.println(nPackets);
                 for (int i = 0; i < nPackets; i++){
                     Udp.read(packetBufferIncoming, INCOMING_PACKET_SIZE);
                     handlePacket(packetBufferIncoming);
                 }
             }
-            
-            
-        
         } else {
             
             memset(packetBufferIncoming, 0, INCOMING_PACKET_SIZE);
             
             // todo does read return a value, should we error check?
-            
             Udp.read(packetBufferIncoming,nbytes);
             handlePacket(packetBufferIncoming);
             
-//            digitalWrite(D7,HIGH);
-//            delay(20);
-//            digitalWrite(D7,LOW);
         }
     }
 }
@@ -210,7 +199,6 @@ void handlePacket( byte * data){
     serverIp[2] = O2Spacket.ofIp >> 8 & 0xFF;
     serverIp[3] = O2Spacket.ofIp & 0xFF;
     
-    
     statsLookAtPacketOrder(O2Spacket.packetCount);
     
 
@@ -236,9 +224,6 @@ void handlePacket( byte * data){
         S2Opacket.outOfOrderPerSecond = outOfOrderPerSecondSmooth;
         S2Opacket.missedPacketPerSecond = missedPacketPerSecondSmooth;
         
-        // MAC ADDRESS ?
-        
-        // gray our ID (uuid)
         String uuidTemp = Spark.deviceID();
         // memcpy packet into byte array:
         memcpy(S2Opacket.uuid,uuidTemp.c_str(),uuidTemp.length());
@@ -271,7 +256,9 @@ void handlePacket( byte * data){
                 transitionTime = O2Spacket.transitionTime;
 
                 targetTime = millis() + transitionTime;
+
             } else {
+                
                 previousColor.r = O2Spacket.r;
                 previousColor.g = O2Spacket.g;
                 previousColor.b = O2Spacket.b;

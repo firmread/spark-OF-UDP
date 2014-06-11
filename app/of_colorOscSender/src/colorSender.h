@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
 #include "ofxOsc.h"
+#include "ofxBlur.h"
 
 class colorSender {
     
@@ -14,9 +15,13 @@ public:
     void grabScreen();
     void drawSentColors();
     
+    
+    ofxBlur blur;
     ofFbo   screenTextue;
     ofFbo   lineTexture;
     ofPixels pix;
+    
+    void drawWherePickingFrom();
     
     string ipAddress;
     int port;

@@ -1,8 +1,10 @@
 #include "ofApp.h"
+#include "baseScene.h"
+#include "messagesScene.h"
+#include "pulseScene.h"
 
 
-
-
+int whichScene = 0;
 //--------------------------------------------------------------
 void ofApp::setup(){
 
@@ -10,6 +12,21 @@ void ofApp::setup(){
 
     img.loadImage("band.png");
     pos = -img.getWidth();
+    
+
+    scenes.push_back(new messagesScene());
+    scenes.push_back(new pulseScene());
+    scenes.push_back(new crazyScene());
+    scenes.push_back(new movieScene());
+    scenes.push_back(new patternScene());
+    scenes.push_back(new recordedPulseScene());
+    
+    for (int i = 0; i < scenes.size(); i++){
+        scenes[i]->setup();
+    }
+    
+    
+    blur.setup(ofGetWidth(), ofGetHeight());
 }
 
 
@@ -18,33 +35,34 @@ void ofApp::update(){
 
     sender.send();
     
-    pos += 1.0;
-    if (pos > 120){
-        pos = -img.getWidth();
-    }
+    scenes[whichScene]->update();
+    
+  
 }
+
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 
-    if (ofGetFrameNum() % 3 == 0){
-        ofClear(ofRandom(0,255), ofRandom(0,255), ofRandom(0,255));
-    } else {
-        ofClear(0,0,0);
-        
-    }
-    ofFill();
-    ofSetColor(255,255,255);
-    img.draw(pos, 0); //(mouseX,0,500,500);
-    ofDisableAlphaBlending();
+    ofBackground(0);
+    scenes[whichScene]->draw();
+    
     sender.grabScreen();
+    
+    sender.drawWherePickingFrom();
     sender.drawSentColors();
+    
 
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
+    
+    if (key == ' '){
+        whichScene ++;
+        whichScene %= scenes.size();
+    }
 }
 
 //--------------------------------------------------------------

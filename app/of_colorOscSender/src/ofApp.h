@@ -2,6 +2,10 @@
 
 #include "ofMain.h"
 #include "colorSender.h"
+#include "ofxGui.h"
+#include "ofxBlur.h"
+#include "messagesScene.h"
+#include "baseScene.h"
 
 
 class ofApp : public ofBaseApp{
@@ -21,10 +25,15 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+        vector < baseScene * > scenes;
+    
     
         colorSender sender;
         ofImage img;
     
         float pos;
+    
+        ofxBlur blur;
+    
     
 };
