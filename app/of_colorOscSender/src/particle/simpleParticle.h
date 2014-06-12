@@ -16,6 +16,7 @@ public:
     float y;
     float xspeed;
     float yspeed;
+    float r;
     
     ofColor c;
 
@@ -25,6 +26,7 @@ public:
         y = 100;
         xspeed = 2.5;
         yspeed = 2;
+        r = 50;
         
     }
     
@@ -32,6 +34,11 @@ public:
         
         x = x + xspeed;
         y = y + yspeed;
+       
+
+    }
+    
+    void bounceOffTheWall(){
         
         if ((x > ofGetWidth()) || (x < 0)) {
             xspeed = xspeed * -1;
@@ -39,14 +46,34 @@ public:
         if ((y > ofGetHeight()) || (y < 0)) {
             yspeed = yspeed * -1;
         }
-
+    }
+    
+    void jumpsToTheOtherSide(){
+        if (x > ofGetWidth() + r) {
+            x = -r;
+        }
+        if (x < -r){
+            x = ofGetWidth() + r;
+        }
+        
+        if (y > ofGetHeight()){
+            y = -r;
+        }
+        if (y < -r){
+            y = ofGetHeight() + r;
+        }
+    }
+    
+    void setAlpha(float alpha){
+        ofClamp(alpha, 0, 255);
+        c = *new ofColor(c, alpha);
     }
     
     void draw(){
         
         ofSetColor(c);
         ofFill();
-        ofCircle(x, y, 50);
+        ofCircle(x, y, r);
         
 
     }

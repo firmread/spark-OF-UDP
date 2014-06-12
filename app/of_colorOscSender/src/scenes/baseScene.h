@@ -3,6 +3,9 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "message.h"
+#include "simpleParticle.h"
+#include "particle.h"
 
 class baseScene {
     
@@ -24,6 +27,8 @@ public:
     virtual void mousePressed(int x, int y, int button){}
     virtual void mouseReleased(int x, int y, int button){}
     
+    virtual void keyPressed(int key){};
+    virtual void keyReleased(int key){};
     
     void hide(){
         
@@ -37,14 +42,5 @@ public:
 
 
 
-
-typedef struct {
-    
-    ofColor color;
-    float position;
-    float speed;
-    float width;
-    
-} message;
 
 

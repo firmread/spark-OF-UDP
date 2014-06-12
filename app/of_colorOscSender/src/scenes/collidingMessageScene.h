@@ -21,13 +21,18 @@ class collidingMessageScene : public baseScene {
     void setup();
     void update();
     void draw();
+    void keyPressed(int key);
+    void mouseDragged(int x, int y, int button);
     
-    vector < message > messages;
+    vector < message > messagesL;
+    vector < message > messagesR;
     
-    //    ofxBlur blur;
-    //    ofFbo fboA;
-    //    ofFbo fboB;
+    float sineSpeed;
+    float minColor; // 0-1
+    float colorVaryRange;
+    float colorVarySpeed;
+    float speedMultiplier;
     
-    
+//    void detectCollision(message &a, message &b);
     
 };

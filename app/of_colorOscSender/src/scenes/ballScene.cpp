@@ -22,6 +22,9 @@ void ballScene::setup(){
 //        temp.c.set(255);
         temp.c.setHsb(ofRandom(255), 255, 255);
         sp.push_back(temp);
+        
+        sineAlphaSpeed = 0.005;
+        minAlpha = 20;
     }
 }
 
@@ -31,6 +34,12 @@ void ballScene::update(){
  
     for (int i = 0 ; i<sp.size(); i++) {
         sp[i].update();
+        sp[i].jumpsToTheOtherSide();
+        
+        float sine = sin(ofGetElapsedTimef() * i * sineAlphaSpeed + i);
+        minAlpha = ofMap(mousePos.x , 0,  ofGetWidth(), 0, 255);
+        sine = ofMap(sine, -1, 1, minAlpha, 255);
+        sp[i].setAlpha(sine);
     }
 }
 
@@ -47,4 +56,8 @@ void ballScene::mouseDragged(int x, int y, int button){
     for (int i = 0 ; i< sp.size(); i++) {
         sp[i].addAttractionForce(x, y, 10000, 1.0);
     }
+}
+
+void ballScene::mouseMoved(int x, int y){
+    mousePos.set(x,y);
 }

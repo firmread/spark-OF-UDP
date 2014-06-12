@@ -1,6 +1,5 @@
 
 #pragma once
-#include "particle.h"
 #include "baseScene.h"
 
 class particleScene : public baseScene {

@@ -6,6 +6,7 @@ int whichScene = 0;
 void ofApp::setup(){
 
     sender.setup();
+    ofEnableAlphaBlending();
     
     scenes.push_back(new collidingMessageScene());
     scenes.push_back(new messagesScene());
@@ -13,8 +14,8 @@ void ofApp::setup(){
     scenes.push_back(new crazyScene());
     scenes.push_back(new patternScene());
     scenes.push_back(new recordedPulseScene());
-    scenes.push_back(new particleScene());
     scenes.push_back(new ballScene());
+    scenes.push_back(new particleScene());
     scenes.push_back(new movieScene());
     
     for (int i = 0; i < scenes.size(); i++){
@@ -78,11 +79,12 @@ void ofApp::keyPressed(int key){
 //        blurness +=.1;
 //        if (blurness > 1) blurness = 0;
 //    }
+    scenes[whichScene]->keyPressed(key);
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+    scenes[whichScene]->keyReleased(key);
 }
 
 //--------------------------------------------------------------

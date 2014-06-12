@@ -118,6 +118,7 @@
 		35BB9BB90DBABFD3B39F8DB6 /* ofxUDPManager.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxUDPManager.cpp; path = ../../../addons/ofxNetwork/src/ofxUDPManager.cpp; sourceTree = SOURCE_ROOT; };
 		3B361208CD4107E479F04E7B /* NetworkingUtils.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = NetworkingUtils.cpp; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/posix/NetworkingUtils.cpp; sourceTree = SOURCE_ROOT; };
 		444657A12E59D0ED86981498 /* TimerListener.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = TimerListener.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/TimerListener.h; sourceTree = SOURCE_ROOT; };
+		471C0E7F194A20B4008E4055 /* message.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = message.h; sourceTree = "<group>"; };
 		471D50F51948C90400B2C196 /* particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particle.cpp; sourceTree = "<group>"; };
 		471D50F71948C93A00B2C196 /* particleScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particleScene.cpp; sourceTree = "<group>"; };
 		471D50F81948C93A00B2C196 /* particleScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particleScene.h; sourceTree = "<group>"; };
@@ -312,6 +313,7 @@
 			children = (
 				471D50F51948C90400B2C196 /* particle.cpp */,
 				4762EE441948BF7800D4F1CC /* particle.h */,
+				471C0E7F194A20B4008E4055 /* message.h */,
 				471D50FF1948CFB300B2C196 /* simpleParticle.h */,
 			);
 			path = particle;
@@ -403,10 +405,10 @@
 				4762EE361948B25400D4F1CC /* patternScene.h */,
 				4762EE3B1948B32C00D4F1CC /* recordedPulseScene.cpp */,
 				4762EE3C1948B32C00D4F1CC /* recordedPulseScene.h */,
-				471D50F71948C93A00B2C196 /* particleScene.cpp */,
-				471D50F81948C93A00B2C196 /* particleScene.h */,
 				471D50FC1948CE3B00B2C196 /* ballScene.cpp */,
 				471D50FB1948CE2B00B2C196 /* ballScene.h */,
+				471D50F71948C93A00B2C196 /* particleScene.cpp */,
+				471D50F81948C93A00B2C196 /* particleScene.h */,
 				4762EE381948B2D900D4F1CC /* movieScene.cpp */,
 				4762EE391948B2D900D4F1CC /* movieScene.h */,
 			);
