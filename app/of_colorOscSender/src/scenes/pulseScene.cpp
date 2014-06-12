@@ -14,10 +14,10 @@
 void pulseScene::setup(){
     
     //vector < message > messages;
-    
-    blur.setup(ofGetWidth(), ofGetHeight());
-    fboA.allocate(ofGetWidth(), ofGetHeight());
-    fboB.allocate(ofGetWidth(), ofGetHeight());
+
+//    blur.setup(ofGetWidth(), ofGetHeight());
+//    fboA.allocate(ofGetWidth(), ofGetHeight());
+//    fboB.allocate(ofGetWidth(), ofGetHeight());
     
     
 }

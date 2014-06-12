@@ -7,13 +7,13 @@
 //#include "ofxBlur.h"
 
 
-class messagesScene : public baseScene {
+class crazyScene : public baseScene {
     
     void setup();
     void update();
     void draw();
     
-    vector < message > messages;
+    
     
 //    ofxBlur blur;
 //    ofFbo fboA;

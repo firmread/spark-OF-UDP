@@ -6,23 +6,23 @@
 //
 //
 
-#include "messagesScene.h"
+#include "collidingMessageScene.h"
 
 
 
-    
-void messagesScene::setup(){
+
+void collidingMessageScene::setup(){
     
     //vector < message > messages;
     
-//    blur.setup(ofGetWidth(), ofGetHeight());
-//    fboA.allocate(ofGetWidth(), ofGetHeight());
-//    fboB.allocate(ofGetWidth(), ofGetHeight());
+    //    blur.setup(ofGetWidth(), ofGetHeight());
+    //    fboA.allocate(ofGetWidth(), ofGetHeight());
+    //    fboB.allocate(ofGetWidth(), ofGetHeight());
     
     
 }
 
-void messagesScene::update(){
+void collidingMessageScene::update(){
     
     
     for (int i = 0; i < messages.size(); i++){
@@ -42,7 +42,7 @@ void messagesScene::update(){
     
 }
 
-void messagesScene::draw(){
+void collidingMessageScene::draw(){
     
     //blur.begin();
     ofClear(0);
@@ -53,18 +53,18 @@ void messagesScene::draw(){
     ofRect(0,0,ofGetWidth(), ofGetHeight());
     for (int i = 0; i < messages.size(); i++){
         ofFill();
-        ofSetColor(messages[i].color);
+        ofSetColor((messages[i].color)* abs(sin(ofGetElapsedTimef()*messages[i].width/5) + 1)/2);
         ofRect(messages[i].position, 0, messages[i].width, ofGetHeight());
     }
     //blur.end();
     
     
-//    fboA.begin();
-//    ofSetColor(255);
-//    blur.draw();
-//    fboA.end();
-//    
-//    blur.draw();
+    //    fboA.begin();
+    //    ofSetColor(255);
+    //    blur.draw();
+    //    fboA.end();
+    //
+    //    blur.draw();
 }
-    
+
 

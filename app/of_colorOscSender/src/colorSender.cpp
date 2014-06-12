@@ -31,13 +31,14 @@ void colorSender::grabScreen(){
     ofSetColor(255,255,255);
     
     
-    blur.begin();
-    ofClear(0);
-    screenTextue.draw(0,0);
-    blur.end();
+//    blur.begin();
+//    ofClear(0);
+//    screenTextue.draw(0,0);
+//    blur.end();
     
     lineTexture.begin();
-    blur.base.draw(0,0,50,1);
+    //blur.base.draw(0,0,50,1);
+    screenTextue.draw(0,0,50,1);
     lineTexture.end();
    
     lineTexture.readToPixels(pix);
@@ -54,6 +55,42 @@ void colorSender::grabScreen(){
         
         colors[i].a = 255;
     }
+    
+//    ofColor temp[50];
+//    
+//    for (int j = 0; j < 3; j++){
+//    for (int i = 0; i < colors.size(); i++){
+//        
+//        int i_m_1 = MAX(0,i-1);
+//        int i_p_1 = MIN(colors.size()-1, i+1);
+//        
+//        temp[i].r = 0.1 * colors[i-1].r +
+//                    0.8 * colors[i].r +
+//                    0.1 * colors[i + 1].r;
+//        
+//        temp[i].g = 0.1 * colors[i-1].g +
+//        0.8 * colors[i].g +
+//        0.1 * colors[i + 1].g;
+//        
+//        temp[i].b = 0.1 * colors[i-1].b +
+//        0.8 * colors[i].b +
+//        0.1 * colors[i + 1].b;
+//        
+//        //pix.getColor(i,0);
+//    }
+//    
+//    for (int i = 0; i < colors.size(); i++){
+//        colors[i] = temp[i];
+//    }
+//    }
+    
+    
+    
+    
+    
+    
+    
+    
     
 }
 
@@ -84,6 +121,7 @@ void colorSender::send(){
 void colorSender::drawSentColors(){
     // ------- draw colors at the base of the window
     float width = ofGetWidth() / (float)colors.size();
+    ofPushStyle();
     for (int i = 0; i < colors.size(); i++){
 
 
@@ -104,4 +142,5 @@ void colorSender::drawSentColors(){
         }
         
     }
+    ofPopStyle();
 }

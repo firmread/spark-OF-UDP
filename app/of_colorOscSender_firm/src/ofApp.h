@@ -4,18 +4,8 @@
 #include "colorSender.h"
 
 #include "baseScene.h"
-#include "messagesScene.h"
-#include "pulseScene.h"
-#include "crazyScene.h"
-#include "movieScene.h"
-#include "patternScene.h"
-#include "recordedPulseScene.h"
-#include "particleScene.h"
-#include "ballScene.h"
-#include "collidingMessageScene.h"
+#include "animation01.h"
 
-
-#include "ofxGui.h"
 #include "ofxBlur.h"
 
 
@@ -36,15 +26,18 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-        vector < baseScene * > scenes;
-    
     
         colorSender sender;
+        ofImage img;
     
         float pos;
-        ofxBlur blur;
-        float blurness;
     
+    ofxBlur blur;
+    
+    float blurness;
+    
+    vector < baseScene *> scenes;
+    int currentScene = 0;
     
     
 };

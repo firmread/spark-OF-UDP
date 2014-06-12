@@ -1,7 +1,4 @@
 #include "ofApp.h"
-#include "baseScene.h"
-#include "messagesScene.h"
-#include "pulseScene.h"
 
 
 int whichScene = 0;
@@ -9,24 +6,25 @@ int whichScene = 0;
 void ofApp::setup(){
 
     sender.setup();
-
-    img.loadImage("band.png");
-    pos = -img.getWidth();
     
-
+    scenes.push_back(new collidingMessageScene());
     scenes.push_back(new messagesScene());
     scenes.push_back(new pulseScene());
     scenes.push_back(new crazyScene());
-    scenes.push_back(new movieScene());
     scenes.push_back(new patternScene());
     scenes.push_back(new recordedPulseScene());
+    scenes.push_back(new particleScene());
+    scenes.push_back(new ballScene());
+    scenes.push_back(new movieScene());
     
     for (int i = 0; i < scenes.size(); i++){
         scenes[i]->setup();
     }
     
+//    blur.setup(ofGetWidth(), ofGetHeight(), 4, .2, 4);
     
-    blur.setup(ofGetWidth(), ofGetHeight());
+//    blur.setup(ofGetWidth(), ofGetHeight());
+//    blurness = 0;
 }
 
 
@@ -37,7 +35,9 @@ void ofApp::update(){
     
     scenes[whichScene]->update();
     
-  
+//    blur.setScale(0);
+//    blur.setScale(blurness);
+//    blur.setRotation(ofMap(mouseY, 0, ofGetHeight(), -PI, PI));
 }
 
 
@@ -45,12 +45,17 @@ void ofApp::update(){
 void ofApp::draw(){
 
     ofBackground(0);
+
+    ofPushStyle();
     scenes[whichScene]->draw();
-    
+    ofPopStyle();
     sender.grabScreen();
     
     sender.drawWherePickingFrom();
     sender.drawSentColors();
+    
+    ofDrawBitmapStringHighlight("scene : " + ofToString(whichScene),20,20);
+    
     
 
 }
@@ -63,6 +68,16 @@ void ofApp::keyPressed(int key){
         whichScene ++;
         whichScene %= scenes.size();
     }
+//    if (key == 'a'){
+//        scenes[whichScene]->blurness += 0.1;
+//        if (scenes[whichScene]->blurness > 2.0)scenes[whichScene]->blurness = 0;
+//    }
+    
+//    if (key == 'z') {
+//        
+//        blurness +=.1;
+//        if (blurness > 1) blurness = 0;
+//    }
 }
 
 //--------------------------------------------------------------
@@ -72,22 +87,22 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
-
+    scenes[whichScene]->mouseMoved(x, y);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+    scenes[whichScene]->mouseDragged(x, y, button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+    scenes[whichScene]->mousePressed(x,y,button);
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
-
+    scenes[whichScene]->mouseReleased(x, y, button);
 }
 
 //--------------------------------------------------------------
