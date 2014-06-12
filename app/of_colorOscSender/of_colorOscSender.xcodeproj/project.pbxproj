@@ -136,6 +136,7 @@
 		4762EE3B1948B32C00D4F1CC /* recordedPulseScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = recordedPulseScene.cpp; sourceTree = "<group>"; };
 		4762EE3C1948B32C00D4F1CC /* recordedPulseScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = recordedPulseScene.h; sourceTree = "<group>"; };
 		4762EE441948BF7800D4F1CC /* particle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = particle.h; sourceTree = "<group>"; };
+		479E3423194A419F004B8966 /* rectAnim.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rectAnim.h; sourceTree = "<group>"; };
 		48974F980F51769171D0B2F5 /* IpEndpointName.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = IpEndpointName.h; path = ../../../addons/ofxOsc/libs/oscpack/src/ip/IpEndpointName.h; sourceTree = SOURCE_ROOT; };
 		4E95FB446A9C9C6F0DE12D75 /* OscPrintReceivedElements.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = OscPrintReceivedElements.h; path = ../../../addons/ofxOsc/libs/oscpack/src/osc/OscPrintReceivedElements.h; sourceTree = SOURCE_ROOT; };
 		50DF87D612C5AAE17AAFA6C0 /* ofxXmlSettings.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = ofxXmlSettings.cpp; path = ../../../addons/ofxXmlSettings/src/ofxXmlSettings.cpp; sourceTree = SOURCE_ROOT; };
@@ -313,8 +314,9 @@
 			children = (
 				471D50F51948C90400B2C196 /* particle.cpp */,
 				4762EE441948BF7800D4F1CC /* particle.h */,
-				471C0E7F194A20B4008E4055 /* message.h */,
 				471D50FF1948CFB300B2C196 /* simpleParticle.h */,
+				471C0E7F194A20B4008E4055 /* message.h */,
+				479E3423194A419F004B8966 /* rectAnim.h */,
 			);
 			path = particle;
 			sourceTree = "<group>";
@@ -395,20 +397,20 @@
 				924000A3193F99D100FFF308 /* baseScene.h */,
 				471D51001948E20500B2C196 /* collidingMessageScene.cpp */,
 				471D51021948E21300B2C196 /* collidingMessageScene.h */,
-				924000A5193F9A0E00FFF308 /* messagesScene.cpp */,
-				924000A6193F9A0E00FFF308 /* messagesScene.h */,
-				924000AC193F9FED00FFF308 /* pulseScene.cpp */,
-				924000AD193F9FED00FFF308 /* pulseScene.h */,
-				4762EE321948B1F600D4F1CC /* crazyScene.cpp */,
-				4762EE331948B1F600D4F1CC /* crazyScene.h */,
 				4762EE351948B25400D4F1CC /* patternScene.cpp */,
 				4762EE361948B25400D4F1CC /* patternScene.h */,
-				4762EE3B1948B32C00D4F1CC /* recordedPulseScene.cpp */,
-				4762EE3C1948B32C00D4F1CC /* recordedPulseScene.h */,
+				924000AC193F9FED00FFF308 /* pulseScene.cpp */,
+				924000AD193F9FED00FFF308 /* pulseScene.h */,
 				471D50FC1948CE3B00B2C196 /* ballScene.cpp */,
 				471D50FB1948CE2B00B2C196 /* ballScene.h */,
+				4762EE3B1948B32C00D4F1CC /* recordedPulseScene.cpp */,
+				4762EE3C1948B32C00D4F1CC /* recordedPulseScene.h */,
+				4762EE321948B1F600D4F1CC /* crazyScene.cpp */,
+				4762EE331948B1F600D4F1CC /* crazyScene.h */,
 				471D50F71948C93A00B2C196 /* particleScene.cpp */,
 				471D50F81948C93A00B2C196 /* particleScene.h */,
+				924000A5193F9A0E00FFF308 /* messagesScene.cpp */,
+				924000A6193F9A0E00FFF308 /* messagesScene.h */,
 				4762EE381948B2D900D4F1CC /* movieScene.cpp */,
 				4762EE391948B2D900D4F1CC /* movieScene.h */,
 			);

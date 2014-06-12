@@ -6,6 +6,7 @@
 #include "message.h"
 #include "simpleParticle.h"
 #include "particle.h"
+#include "rectAnim.h"
 
 class baseScene {
     

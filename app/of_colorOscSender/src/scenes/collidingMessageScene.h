@@ -26,6 +26,7 @@ class collidingMessageScene : public baseScene {
     
     vector < message > messagesL;
     vector < message > messagesR;
+    vector < rectAnim > rects;
     
     float sineSpeed;
     float minColor; // 0-1

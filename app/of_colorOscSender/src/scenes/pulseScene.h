@@ -20,5 +20,7 @@ class pulseScene : public baseScene {
 //    ofFbo fboB;
     
     
-    
+    float speed;
+    float phase;
+    void mouseDragged(int x, int y, int button);
 };

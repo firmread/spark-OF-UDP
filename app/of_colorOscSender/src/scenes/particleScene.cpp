@@ -13,7 +13,7 @@
 
 //--------------------------------------------------------------
 void particleScene::setup(){
-	
+    particles.clear();
 	for (int i = 0; i < 100; i++){
 		particle myParticle;
         float r = ofRandom(-4,4);
@@ -57,6 +57,8 @@ void particleScene::draw(){
 	for (int i = 0; i < particles.size(); i++){
 		particles[i].draw();
 	}
+    
+    ofDrawBitmapStringHighlight("particle scene", 20, 60);
     
 }
 

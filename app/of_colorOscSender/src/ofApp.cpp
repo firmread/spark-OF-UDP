@@ -4,18 +4,18 @@
 int whichScene = 0;
 //--------------------------------------------------------------
 void ofApp::setup(){
-
+    ofSetFrameRate(60);
     sender.setup();
     ofEnableAlphaBlending();
     
     scenes.push_back(new collidingMessageScene());
-    scenes.push_back(new messagesScene());
-    scenes.push_back(new pulseScene());
-    scenes.push_back(new crazyScene());
     scenes.push_back(new patternScene());
-    scenes.push_back(new recordedPulseScene());
+    scenes.push_back(new pulseScene());
     scenes.push_back(new ballScene());
+    scenes.push_back(new recordedPulseScene());
+    scenes.push_back(new crazyScene());
     scenes.push_back(new particleScene());
+    scenes.push_back(new messagesScene());
     scenes.push_back(new movieScene());
     
     for (int i = 0; i < scenes.size(); i++){
@@ -26,6 +26,7 @@ void ofApp::setup(){
     
 //    blur.setup(ofGetWidth(), ofGetHeight());
 //    blurness = 0;
+    bHoldingReturn = false;
 }
 
 
@@ -35,6 +36,15 @@ void ofApp::update(){
     sender.send();
     
     scenes[whichScene]->update();
+    
+    
+    //flash
+    if (bFadeAlpha) {
+        flashAlpha -= 10;
+        if (flashAlpha <= 0) {
+            bFadeAlpha = false;
+        }
+    }
     
 //    blur.setScale(0);
 //    blur.setScale(blurness);
@@ -50,12 +60,28 @@ void ofApp::draw(){
     ofPushStyle();
     scenes[whichScene]->draw();
     ofPopStyle();
+    
+    //flash
+    if (bHitReturnFlash) {
+        bHitReturnFlash = false;
+        bFadeAlpha = true;
+        scenes[whichScene]->setup();
+    }
+    if (flashAlpha > 0 ) {
+        ofSetColor(255, flashAlpha);
+        ofRect(0, 0, ofGetWidth(), ofGetHeight());
+    }
+    
+    //grab to colorsender
     sender.grabScreen();
     
     sender.drawWherePickingFrom();
     sender.drawSentColors();
     
-    ofDrawBitmapStringHighlight("scene : " + ofToString(whichScene),20,20);
+    ofDrawBitmapStringHighlight("scene : " + ofToString(whichScene)
+                                + " / " + ofToString(scenes.size()-1)
+                                + "\n'space' = next scene, 'return' = flash"
+                                ,20,20);
     
     
 
@@ -68,6 +94,13 @@ void ofApp::keyPressed(int key){
     if (key == ' '){
         whichScene ++;
         whichScene %= scenes.size();
+    }
+    
+    //flash
+    if (key == OF_KEY_RETURN){
+        flashAlpha = 255;
+        bHoldingReturn = true;
+        bHitReturnFlash = true;
     }
 //    if (key == 'a'){
 //        scenes[whichScene]->blurness += 0.1;

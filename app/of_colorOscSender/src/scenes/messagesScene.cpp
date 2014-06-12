@@ -13,12 +13,7 @@
     
 void messagesScene::setup(){
     
-    //vector < message > messages;
-    
-//    blur.setup(ofGetWidth(), ofGetHeight());
-//    fboA.allocate(ofGetWidth(), ofGetHeight());
-//    fboB.allocate(ofGetWidth(), ofGetHeight());
-    
+    messages.clear();
     
 }
 
@@ -44,10 +39,7 @@ void messagesScene::update(){
 
 void messagesScene::draw(){
     
-    //blur.begin();
     ofClear(0);
-    //ofSetColor(255);
-    //fboA.draw(0, 0);
     ofFill();
     ofSetColor(0);
     ofRect(0,0,ofGetWidth(), ofGetHeight());
@@ -56,15 +48,8 @@ void messagesScene::draw(){
         ofSetColor(messages[i].color);
         ofRect(messages[i].position, 0, messages[i].width, ofGetHeight());
     }
-    //blur.end();
     
-    
-//    fboA.begin();
-//    ofSetColor(255);
-//    blur.draw();
-//    fboA.end();
-//    
-//    blur.draw();
+    ofDrawBitmapStringHighlight("messages scene\nclick to generate message", 20, 60);
 }
     
 

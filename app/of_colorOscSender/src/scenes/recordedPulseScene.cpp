@@ -37,4 +37,6 @@ void recordedPulseScene::draw(){
         ofFill();
         ofRect(width*i, 0, width, ofGetHeight());
     }
+    
+    ofDrawBitmapStringHighlight("recorded pulse scene", 20, 60);
 }

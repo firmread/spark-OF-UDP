@@ -18,8 +18,8 @@ void pulseScene::setup(){
 //    blur.setup(ofGetWidth(), ofGetHeight());
 //    fboA.allocate(ofGetWidth(), ofGetHeight());
 //    fboB.allocate(ofGetWidth(), ofGetHeight());
-    
-    
+    speed = 5.0;
+    phase = 0.4;
 }
 
 void pulseScene::update(){
@@ -38,10 +38,11 @@ void pulseScene::draw(){
     
     for (int i = 0; i < 50; i++){
         
-        float color = sin(ofGetElapsedTimef() * 5/5.0 + (i*0.4)) * 0.5 + 0.5;
+        float color = sin(ofGetElapsedTimef() * speed/5.0 + (i*phase));
+        color = ofMap(color, -1, 1, 0.0, 1.0);
         
         ofColor temp;
-        temp.setHsb( (int)(ofGetElapsedTimef()*0.1*255 + i * 5) % 255, 255, color*255);
+        temp.setHsb( (int)(ofGetElapsedTimef() * 0.1 + i * 5) % 255, 255, color*255);
         
         ofSetColor( temp);
         ofFill();
@@ -49,8 +50,15 @@ void pulseScene::draw(){
         
     }
     
+    ofDrawBitmapStringHighlight("pulse scene\nspeed (dragged x) : " + ofToString(speed)+
+                                "\nphase (dragged y) : " + ofToString(phase), 20, 60);
     
     
+}
+
+void pulseScene::mouseDragged(int x, int y,int button){
+    speed = ofMap(x, 0, ofGetWidth(), 1.0, 100.0);
+    phase = ofMap(y, 0, ofGetHeight(), 0.01, 2.0);
 }
     
 

@@ -8,18 +8,6 @@
 
 
 class patternScene : public baseScene {
-    
-    
-    
-typedef struct {
-    float alpha;
-    ofColor color;
-    ofColor color2;
-    
-    ofRectangle rect;
-    
-} rectAnim;
-    
 
     
 public:
@@ -27,9 +15,11 @@ public:
     vector < rectAnim > rects;
     
     void setup();
-    
     void update();
-    
     void draw();
     
+    void mouseDragged(int x, int y, int button);
+    
+    float decayRate;
+    float expandRate;
 };

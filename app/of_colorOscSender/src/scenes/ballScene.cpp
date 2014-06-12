@@ -49,6 +49,8 @@ void ballScene::draw(){
     for (int i = 0; i< sp.size(); i++) {
         sp[i].draw();
     }
+    
+    ofDrawBitmapStringHighlight("ball scene", 20, 60);
 }
 
 

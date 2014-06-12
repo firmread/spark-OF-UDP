@@ -27,4 +27,6 @@ void crazyScene::draw(){
         ofFill();
         ofRect(0,0,ofGetWidth(), ofGetHeight());
     }
+    
+    ofDrawBitmapStringHighlight("crazy scene", 20, 60);
 }

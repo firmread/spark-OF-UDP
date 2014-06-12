@@ -44,7 +44,9 @@ class ofApp : public ofBaseApp{
         float pos;
         ofxBlur blur;
         float blurness;
-    
-    
+    bool bHoldingReturn;
+        bool bHitReturnFlash;
+        float flashAlpha;
+    bool bFadeAlpha;
     
 };

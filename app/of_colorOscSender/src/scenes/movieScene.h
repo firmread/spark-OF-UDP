@@ -15,5 +15,7 @@ class movieScene : public baseScene {
     void update();
     void draw();
     
+    void mousePressed(int x, int y, int button);
     
+    float speed;
 };

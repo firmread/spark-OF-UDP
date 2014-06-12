@@ -19,6 +19,10 @@ bool comparisonFunctionInverse ( message a, message b ) {
 
 void collidingMessageScene::setup(){
     
+    messagesL.clear();
+    messagesR.clear();
+    rects.clear();
+    
     sineSpeed = 0.2;
     minColor = 0.5;
     colorVaryRange = 20;
@@ -32,10 +36,21 @@ void collidingMessageScene::update(){
     
     for (int i = 0; i < messagesL.size(); i++){
         messagesL[i].position += messagesL[i].speed * speedMultiplier;
+        if (messagesL[i].position > ofGetWidth()){
+            messagesL.erase(messagesL.begin() + i);
+        }
     }
     
     for (int i = 0; i < messagesR.size(); i++){
         messagesR[i].position -= messagesR[i].speed * speedMultiplier;
+        if (messagesR[i].position < -messagesR[i].width) {
+            messagesR.erase(messagesR.begin() + i);
+        }
+    }
+    
+    
+    for (int i = 0 ; i < rects.size(); i++) {
+        rects[i].animate();
     }
     
 //    if ( ofRandom(0,1) > 0.999|| ofGetMousePressed()){
@@ -51,23 +66,35 @@ void collidingMessageScene::update(){
 //        messagesL.push_back(m);
 //    }
     
-    
+    //sort vectors
     sort(messagesL.begin(), messagesL.end(), comparisonFunction);
     sort(messagesR.begin(), messagesR.end(), comparisonFunctionInverse);
     
-//    for (int i = 0; i < messagesL.size(); i++){
-//        for (int j = 0; j < messagesR.size(); j++) {
-//            if (i != messagesL.begin() && j != messagesR.begin() ) {
-//                <#statements#>
-//            }
+    // check the closest ones
     if (messagesL.size() != 0 && messagesR.size() != 0) {
-            if (abs(messagesL[0].position - messagesR[0].position) < messagesL[0].width ) {
-                messagesL.erase(messagesL.begin());
-                messagesR.erase(messagesR.begin());
-                //create another bang
+        if (abs(messagesL[0].position - messagesR[0].position) < messagesL[0].width ) {
+            //create another bang
+            rectAnim newOne;
+            newOne.rect.x = messagesR[0].position;
+            newOne.rect.y = 0;
+            
+            if (messagesL[0].width > messagesR[0].width) {
+                newOne.color1 = messagesL[0].color;
             }
-//        }
-//    }
+            else{
+                newOne.color1 = messagesR[0].color;
+            }
+            
+            newOne.color = newOne.color1;
+            newOne.color2.set(255);
+            newOne.rect.width = ofRandom(5,15);
+            newOne.rect.height = ofGetHeight();
+            newOne.alpha = 255;
+            rects.push_back(newOne);
+            
+            messagesL.erase(messagesL.begin());
+            messagesR.erase(messagesR.begin());
+        }
     }
 
     
@@ -93,7 +120,13 @@ void collidingMessageScene::draw(){
 //        messagesR[i].draw();
         
     }
+    // draw collision rect
+    for (int i = 0; i < rects.size(); i++){
+        rects[i].draw();
+    }
+
     
+    ofDrawBitmapStringHighlight("colliding message scene\npress A and S\ndrag mouseX to adjust speed", 20, 60);
 }
 
 
@@ -128,7 +161,7 @@ void collidingMessageScene::keyPressed(int key){
 
 
 void collidingMessageScene::mouseDragged(int x , int y , int button){
-    speedMultiplier = ofMap(x, 0, ofGetWidth(), 0.5, 2.0);
+    speedMultiplier = ofMap(x, 0, ofGetWidth(), 0.5, 50.0);
 }
 
 
