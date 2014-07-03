@@ -25,7 +25,7 @@ UDP Udp;
 bool bOnline;       // are we online for real?
 int startupSequenceTime = 45000;  // 15 seconds
 int lastTimeData;
-int notGotDataTimeOut = 6000;
+int notGotDataTimeOut = 60000;
 
 
 
