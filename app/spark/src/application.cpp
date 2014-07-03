@@ -21,7 +21,13 @@ byte  packetBufferIncoming[INCOMING_PACKET_SIZE];
 byte  packetBufferOutgoing[OUTGOING_PACKET_SIZE];
 UDP Udp;
 
+
 bool bOnline;       // are we online for real?
+int startupSequenceTime = 45000;  // 15 seconds
+int lastTimeData;
+int notGotDataTimeOut = 6000;
+
+
 
 ofToSparkyPacket O2Spacket;
 sparkyToOFPacket S2Opacket;
@@ -44,6 +50,9 @@ int targetTime, transitionTime;
 //--------------------------------------------------------------
 void setup(){
     
+
+    lastTimeData = millis();
+
     // we do very little network related or print out here, since this runs even before we are actually online
     
     #ifdef USE_SERIAL
@@ -90,7 +99,42 @@ void loop(){
         }
     }
 
-    pwm (r,g,b);
+    if (millis() < startupSequenceTime){
+        if (bOnline){
+            pwm (0,255,0);
+        } else {
+            pwm (0,0,255);
+        }
+    } else if ((millis() - lastTimeData) > notGotDataTimeOut) {
+        
+        // 
+        // turn millis into magic
+        // 
+        // 
+        // 
+         
+        float valR = 0.5 * (sin(millis() / 1000.0) * 0.5 + 0.5) +
+                    0.5 * (sin(millis() / 10000.0) * 0.5 + 0.5) ;
+
+        float valG = 0.1 * (sin(millis() / 1000.0) * 0.5 + 0.5) +
+                    0.4 * (sin(millis() / 2230.0) * 0.5 + 0.5) +
+                    0.5 * (sin(millis() / 10000.0 + 600) * 0.5 + 0.5) ;
+
+
+        //ofSetColor(0,valR * 255, valG*255);
+        //ofRect(50,50,100,100);
+
+        // do something. 
+        pwm (valR, valG, 0);
+
+    } else {
+        pwm (r,g,b);
+    }
+    //bool bOnline;       // are we online for real?
+    //int startupSequenceTime = 15000;  // 15 seconds
+
+
+    
     
     bool bOnlinePrev = bOnline;
     
@@ -157,6 +201,7 @@ void loopOnline(){
                 for (int i = 0; i < nPackets; i++){
                     Udp.read(packetBufferIncoming, INCOMING_PACKET_SIZE);
                     handlePacket(packetBufferIncoming);
+                    lastTimeData = millis();
                 }
             }
         } else {
@@ -166,6 +211,7 @@ void loopOnline(){
             // todo does read return a value, should we error check?
             Udp.read(packetBufferIncoming,nbytes);
             handlePacket(packetBufferIncoming);
+            lastTimeData = millis();
             
         }
     }
