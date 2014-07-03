@@ -63,9 +63,14 @@ void ofApp::setup(){
     gui.add(flipRgb.setup("flip rgb to bgr on send", true));
     gui.add(setAllWhite.setup("set all white", false));
     gui.add(setAllBlack.setup("set all black", false));
+    gui.add(setAllRed.setup("set all red", false));
+    gui.add(setAllBlue.setup("set all blue", false));
+    gui.add(setAllGreen.setup("set all green", false));
     gui.add(setAllRandom.setup("set all random", false));
     
-    gui.setPosition(500,70);
+    
+    preferGuiPos.set(ofGetWidth()*3/4, 70);
+    gui.setPosition(preferGuiPos);
     
     receiver.setup(PORT);
     
@@ -75,6 +80,7 @@ void ofApp::setup(){
     
     //ofSetVerticalSync(false);
     //ofSetFrameRate(60);
+    
 }
 
 
@@ -136,6 +142,27 @@ void ofApp::update(){
             colorValuesForOutput[i] = ofColor::black;
         }
         //useOsc = false;
+    }
+    
+    if (setAllRed == true){
+        setAllRed = false;
+        for (int i = 0; i < colorValuesForOutput.size(); i++){
+            colorValuesForOutput[i] = ofColor::red;
+        }
+    }
+    
+    if (setAllBlue == true){
+        setAllBlue = false;
+        for (int i = 0; i < colorValuesForOutput.size(); i++){
+            colorValuesForOutput[i] = ofColor::blue;
+        }
+    }
+    
+    if (setAllGreen == true){
+        setAllGreen = false;
+        for (int i = 0; i < colorValuesForOutput.size(); i++){
+            colorValuesForOutput[i] = ofColor::green;
+        }
     }
     
     if (setAllRandom == true){
@@ -265,12 +292,24 @@ void ofApp::draw(){
 //        sparks[i].draw(100, 100+100*i);
 //    }
         for (int i =0; i< sparks.size(); i++){
-            sparks[i].drawSmall(100, 100+30*i);
+            
+            // wraping over //
+            // start new column when exceed screen height
+            ofPoint pos(50, 50+60*i);
+            while (pos.y > ofGetHeight()-100) {
+                pos.x += 280;
+                pos.y -= ofGetHeight()-150;
+            }
+            
+            sparks[i].drawSmall(pos.x, pos.y);
+            
         }
     
     
     
-    ofDrawBitmapStringHighlight("conneting light control\n" + myIPaddressString, 500, 20);
+    ofDrawBitmapStringHighlight("Connecting Lights control panel\n" + myIPaddressString,
+                                preferGuiPos.x,
+                                preferGuiPos.y-50);
     
     gui.draw();
     
@@ -309,7 +348,12 @@ void ofApp::keyPressed(int key){
     
     if (key == 'c'){
         //fireControl();
-        
+    }
+    
+    if (key == 'f'){
+        ofToggleFullscreen();
+        preferGuiPos.set(ofGetWidth()*3/4, 70);
+        gui.setPosition(preferGuiPos);
     }
     
     

@@ -51,7 +51,9 @@ public:
     
     void draw( ofRectangle rect ){
         ofFill();
-        ofSetColor(0,0,0);
+        ofSetColor(0);
+        ofRect(rect.x-2, rect.y-2, rect.width+4, rect.height+4);
+        ofSetColor(80);
         ofRect(rect);
         
         ofNoFill();

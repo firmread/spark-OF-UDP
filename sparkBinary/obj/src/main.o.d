@@ -1,16 +1,18 @@
 obj/src/main.o: ../src/main.cpp ../inc/main.h \
  ../../core-common-lib/SPARK_Firmware_Driver/inc/hw_config.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include-fixed/limits.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include-fixed/syslimits.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/limits.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/newlib.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include-fixed/limits.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include-fixed/syslimits.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/limits.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/newlib.h \
  ../../core-common-lib/SPARK_Firmware_Driver/inc/platform_config.h \
  ../../core-common-lib/CMSIS/Device/ST/STM32F10x/Include/stm32f10x.h \
  ../../core-common-lib/CMSIS/Include/core_cm3.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include/stdint.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/stdint.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/_default_types.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/features.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include/stdint.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/stdint.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/_ansi.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/config.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/ieeefp.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/features.h \
  ../../core-common-lib/CMSIS/Include/core_cmInstr.h \
  ../../core-common-lib/CMSIS/Include/core_cmFunc.h \
  ../../core-common-lib/CMSIS/Device/ST/STM32F10x/Include/system_stm32f10x.h \
@@ -36,20 +38,18 @@ obj/src/main.o: ../src/main.cpp ../inc/main.h \
  ../../core-common-lib/SPARK_Firmware_Driver/inc/hw_config.h \
  ../../core-common-lib/CC3000_Host_Driver/cc3000_common.h \
  ../../core-common-lib/CC3000_Host_Driver/data_types.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/stdlib.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/ieeefp.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/_ansi.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/config.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include/stddef.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/reent.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/_ansi.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/_types.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/_types.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/lock.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/stdlib.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/alloca.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/errno.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/errno.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/stdlib.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/_ansi.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include/stddef.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/reent.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/_types.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/_types.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/_default_types.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/lock.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/stdlib.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/alloca.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/errno.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/errno.h \
  ../../core-common-lib/STM32_USB-FS-Device_Driver/inc/usb_type.h \
  ../inc/spark_wlan.h \
  ../../core-common-lib/CC3000_Host_Driver/evnt_handler.h \
@@ -67,25 +67,24 @@ obj/src/main.o: ../src/main.cpp ../inc/main.h \
  ../../core-common-lib/SPARK_Firmware_Driver/inc/panic.h \
  ../../core-common-lib/SPARK_Firmware_Driver/inc/panic_codes.h \
  ../inc/spark_utilities.h ../inc/main.h ../inc/spark_wiring_string.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/string.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include-fixed/sys/cdefs.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/string.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/ctype.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/string.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/string.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/ctype.h \
  ../inc/spark_wiring_time.h ../inc/spark_wiring.h \
  ../../core-common-lib/SPARK_Firmware_Driver/inc/config.h \
  ../../core-common-lib/SPARK_Firmware_Driver/inc/spark_macros.h \
  ../../core-common-lib/SPARK_Firmware_Driver/inc/platform_config.h \
  ../inc/spark_utilities.h ../inc/spark_wiring_stream.h \
  ../inc/spark_wiring_print.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/stdio.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include/stdarg.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/types.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/types.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/stdio.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/stdio.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include/stdarg.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/types.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/types.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/stdio.h \
  ../inc/spark_wiring_printable.h ../inc/spark_wiring_ipaddress.h \
  ../inc/spark_wiring_wifi.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/time.h \
- /usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/time.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/time.h \
+ /usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/time.h \
  ../../core-communication-lib/src/spark_protocol.h \
  ../../core-communication-lib/src/spark_descriptor.h \
  ../../core-communication-lib/src/coap.h \
@@ -112,13 +111,13 @@ obj/src/main.o: ../src/main.cpp ../inc/main.h \
 
 ../../core-common-lib/SPARK_Firmware_Driver/inc/hw_config.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include-fixed/limits.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include-fixed/limits.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include-fixed/syslimits.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include-fixed/syslimits.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/limits.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/limits.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/newlib.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/newlib.h:
 
 ../../core-common-lib/SPARK_Firmware_Driver/inc/platform_config.h:
 
@@ -126,13 +125,17 @@ obj/src/main.o: ../src/main.cpp ../inc/main.h \
 
 ../../core-common-lib/CMSIS/Include/core_cm3.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include/stdint.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include/stdint.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/stdint.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/stdint.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/_default_types.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/_ansi.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/features.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/config.h:
+
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/ieeefp.h:
+
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/features.h:
 
 ../../core-common-lib/CMSIS/Include/core_cmInstr.h:
 
@@ -184,33 +187,29 @@ obj/src/main.o: ../src/main.cpp ../inc/main.h \
 
 ../../core-common-lib/CC3000_Host_Driver/data_types.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/stdlib.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/stdlib.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/ieeefp.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/_ansi.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/_ansi.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include/stddef.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/config.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/reent.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include/stddef.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/_types.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/reent.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/_types.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/_ansi.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/_default_types.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/_types.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/lock.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/_types.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/stdlib.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/lock.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/alloca.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/stdlib.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/errno.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/alloca.h:
-
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/errno.h:
-
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/errno.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/errno.h:
 
 ../../core-common-lib/STM32_USB-FS-Device_Driver/inc/usb_type.h:
 
@@ -250,13 +249,11 @@ obj/src/main.o: ../src/main.cpp ../inc/main.h \
 
 ../inc/spark_wiring_string.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/string.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/string.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include-fixed/sys/cdefs.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/string.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/string.h:
-
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/ctype.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/ctype.h:
 
 ../inc/spark_wiring_time.h:
 
@@ -274,15 +271,15 @@ obj/src/main.o: ../src/main.cpp ../inc/main.h \
 
 ../inc/spark_wiring_print.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/stdio.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/stdio.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/lib/gcc/arm-none-eabi/4.8.3/include/stdarg.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/include/stdarg.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/types.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/types.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/types.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/types.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/sys/stdio.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/sys/stdio.h:
 
 ../inc/spark_wiring_printable.h:
 
@@ -290,9 +287,9 @@ obj/src/main.o: ../src/main.cpp ../inc/main.h \
 
 ../inc/spark_wiring_wifi.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/time.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/time.h:
 
-/usr/local/gcc_arm/gcc-arm-none-eabi-4_8-2014q1/arm-none-eabi/include/machine/time.h:
+/usr/local/Cellar/gcc-arm-none-eabi/20140408/bin/../lib/gcc/arm-none-eabi/4.7.4/../../../../arm-none-eabi/include/machine/time.h:
 
 ../../core-communication-lib/src/spark_protocol.h:
 

@@ -66,6 +66,9 @@ public:
     ofxToggle   flipRgb;
     ofxToggle   setAllWhite;
     ofxToggle   setAllBlack;
+    ofxToggle   setAllRed;
+    ofxToggle   setAllBlue;
+    ofxToggle   setAllGreen;
     ofxToggle   setAllRandom;
     ofxToggle   verticalSync;
     ofxFloatSlider   colorFrameRate;
@@ -73,6 +76,8 @@ public:
     ofxIntSlider   interpolateRate;
     
 	ofxPanel    gui;
+    ofPoint preferGuiPos;
+    
     
     // OSC
     ofxOscReceiver receiver;
@@ -83,6 +88,8 @@ public:
     string myIPaddressString;
     int myIPaddressInt;
     string myIPadressJustFirstThree;        // 192.168.10.
+    
+    
     
 
 };

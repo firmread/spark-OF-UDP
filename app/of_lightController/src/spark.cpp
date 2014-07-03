@@ -84,7 +84,7 @@ void spark::draw(int x, int y){
                         "\nmsAlive :" + ofToString(millisRunning) +
                         "\npkg recv:" + ofToString(nPacketsReceived) +
                         "\ntransfT :" + ofToString(transferTime) +
-                        "\nbordNum :" + ofToString(boardNumber), 0,0);
+                        "\nboardNum :" + ofToString(boardNumber), 0,0);
     
     ofPopMatrix();
     
@@ -110,14 +110,14 @@ void spark::drawSmall(int x, int y){
     ofSetColor(200);
     ofDrawBitmapString(
                        "ip: " + ofToString(ip) +
-                       " pkg recv: " + ofToString(nPacketsReceived) +
-                       " transfT: " + ofToString(transferTime) +
-                       " bordNum: " + ofToString(boardNumber), 0,0);
+                       "\npkg recv: " + ofToString(nPacketsReceived) +
+                       "\ntransfT: " + ofToString(transferTime) +
+                       " \nboardNum: " + ofToString(boardNumber), 0,0);
     
     
-    packetPerSecond.draw( ofRectangle(400,0, 50, 20) );
-    missedPerSecond.draw( ofRectangle(500,0, 50, 20) );
-    outOfOrderPerSecond.draw( ofRectangle(600,0, 50, 20) );
+    packetPerSecond.draw( ofRectangle(160,-12, 50, 15) );
+    missedPerSecond.draw( ofRectangle(160,5, 50, 15) );
+    outOfOrderPerSecond.draw( ofRectangle(160,22, 50, 15) );
     
     ofPopMatrix();
     

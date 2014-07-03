@@ -45,6 +45,10 @@ include $(SRC_MAKEFILES)
 # Paths to dependant projects, referenced from root of this project
 LIB_CORE_COMMON_PATH = ../core-common-lib
 LIB_CORE_COMMUNICATION_PATH = ../core-communication-lib
+LIB_CORE_LIBRARIES_PATH = libraries/
+
+# Include directoris for optional "libraries" (eg. Serial2.h)
+INCLUDE_DIRS += $(LIB_CORE_LIBRARIES_PATH)/Serial2
 
 # Additional include directories, applied to objects built for this target.
 INCLUDE_DIRS += $(LIB_CORE_COMMON_PATH)/CMSIS/Include
@@ -68,6 +72,7 @@ CFLAGS += -MD -MP -MF $@.d
 CFLAGS += -DUSE_STDPERIPH_DRIVER
 CFLAGS += -DSTM32F10X_MD
 CFLAGS += -DDFU_BUILD_ENABLE
+CFLAGS += -DSPARK=1
 
 ifeq ("$(USE_SWD_JTAG)","y") 
 CFLAGS += -DUSE_SWD_JTAG
@@ -87,6 +92,8 @@ LDFLAGS += -T../linker/linker_stm32f10x_md_dfu.ld -nostartfiles -Xlinker --gc-se
 LDFLAGS += -L$(SRC_PATH)/$(LIB_CORE_COMMON_PATH)/build -lcore-common-lib
 LDFLAGS += -L$(SRC_PATH)/$(LIB_CORE_COMMUNICATION_PATH)/build -lcore-communication-lib
 LDFLAGS += -Wl,-Map,$(TARGET).map
+LDFLAGS += --specs=nano.specs -lc -lnosys
+LDFLAGS += -u _printf_float
 
 # Assember flags
 ASFLAGS =  -g3 -gdwarf-2 -mcpu=cortex-m3 -mthumb 

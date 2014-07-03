@@ -111,21 +111,20 @@ void loop(){
         // turn millis into magic
         // 
         // 
-        // 
-         
-        float valR = 0.5 * (sin(millis() / 1000.0) * 0.5 + 0.5) +
-                    0.5 * (sin(millis() / 10000.0) * 0.5 + 0.5) ;
+        //
+        
+        float valR = (0.5 * (sin(millis() / 1000.0) * 0.5 + 0.5) +
+                    0.5 * (sin(millis() / 10000.0) * 0.5 + 0.5)) * 255 ;
 
-        float valG = 0.1 * (sin(millis() / 1000.0) * 0.5 + 0.5) +
+        float valG = (0.1 * (sin(millis() / 1000.0) * 0.5 + 0.5) +
                     0.4 * (sin(millis() / 2230.0) * 0.5 + 0.5) +
-                    0.5 * (sin(millis() / 10000.0 + 600) * 0.5 + 0.5) ;
-
+                    0.5 * (sin(millis() / 10000.0 + 600) * 0.5 + 0.5)) * 255 ;
 
         //ofSetColor(0,valR * 255, valG*255);
         //ofRect(50,50,100,100);
 
         // do something. 
-        pwm (valR, valG, 0);
+        pwm (0, valG, valR);
 
     } else {
         pwm (r,g,b);
